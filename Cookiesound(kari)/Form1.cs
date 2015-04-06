@@ -221,27 +221,6 @@ namespace Cookiesound_kari_
                     textBox1.Text = label1.Text = "";
                     //textBox1.Focus();
                 }
-                else if (hook == true && (Keys.A <= e.KeyCode && e.KeyCode <= Keys.Z || e.KeyCode == Keys.Subtract))
-                {
-                    label1.Text += e.KeyCode;
-                    //textBox1.Select(textBox1.Text.Length, 0);
-                }
-                else if (hook == true && e.KeyCode == Keys.Oem7)
-                {
-                    label1.Text += "^";
-                    //textBox1.Select(textBox1.Text.Length, 0);
-                }
-                else if (hook == true && e.KeyCode == Keys.OemMinus)
-                {
-                    label1.Text += "-";
-                    //textBox1.Select(textBox1.Text.Length, 0);
-                }
-                else if (hook == true && Keys.D0 <= e.KeyCode && e.KeyCode <= Keys.D9)
-                {
-                    label1.Text += e.KeyCode;
-                    label1.Text = label1.Text.Remove(label1.Text.Length - 2, 1);
-                    //textBox1.Select(textBox1.Text.Length, 0);
-                }
             }
             else if (!ignore && e.UpDown == KeyboardUpDown.Down)
             {
@@ -299,6 +278,27 @@ namespace Cookiesound_kari_
                     textBox1.Text = label1.Text = "";
                     hook = false;
                 }
+                else if (hook == true && (Keys.A <= e.KeyCode && e.KeyCode <= Keys.Z || e.KeyCode == Keys.Subtract))
+                {
+                    label1.Text += e.KeyCode;
+                    //textBox1.Select(textBox1.Text.Length, 0);
+                }
+                else if (hook == true && e.KeyCode == Keys.Oem7)
+                {
+                    label1.Text += "^";
+                    //textBox1.Select(textBox1.Text.Length, 0);
+                }
+                else if (hook == true && e.KeyCode == Keys.OemMinus)
+                {
+                    label1.Text += "-";
+                    //textBox1.Select(textBox1.Text.Length, 0);
+                }
+                else if (hook == true && Keys.D0 <= e.KeyCode && e.KeyCode <= Keys.D9)
+                {
+                    label1.Text += e.KeyCode;
+                    label1.Text = label1.Text.Remove(label1.Text.Length - 2, 1);
+                    //textBox1.Select(textBox1.Text.Length, 0);
+                }
                 else if (hook == true && label1.Text.Length > 0 && e.KeyCode == Keys.Back)
                 {
                     label1.Text = label1.Text.Remove(label1.Text.Length - 1, 1);
@@ -351,6 +351,7 @@ namespace Cookiesound_kari_
             Form1.Form1Instance = this;
             res = Program.res;
             Program.engine.SoundVolume = (float)((float)other.volume / (float)100);
+            _wmp.settings.volume = other.volume;
         }
 
         private void Form1_FormClosed(object sender, FormClosedEventArgs e)
@@ -386,7 +387,6 @@ namespace Cookiesound_kari_
                     {
                         if (player_stats)
                             _wmp.controls.stop();
-                        _wmp.settings.volume = other.volume;
                         _wmp.URL = "./sound/csr/" + filename + ".mp3";
                         _wmp.controls.play();
                         player_stats = true;
