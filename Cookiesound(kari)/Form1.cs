@@ -207,7 +207,7 @@ namespace Cookiesound_kari_
                             {
                                 Program.engine.Play2D("./sound/" + h.hooksound + ".ogg");
                             }
-                            catch (System.IO.FileNotFoundException ex)
+                            catch (System.IO.FileNotFoundException)
                             {
                                 return;
                             }
@@ -394,15 +394,15 @@ namespace Cookiesound_kari_
                     else if (!m.Success)
                         Program.engine.Play2D("./sound/" + filename + ".ogg");
                 }
-                catch (System.IO.FileNotFoundException ex)
+                catch (System.IO.FileNotFoundException)
                 {
                     return;
                 }
-                catch (System.UriFormatException ex)
+                catch (System.UriFormatException)
                 {
                     return;
                 }
-                catch (System.Exception ex)
+                catch (System.Exception)
                 {
                     return;
                 }

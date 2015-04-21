@@ -80,7 +80,7 @@ namespace ConfigEditor
                         }
                         cReader.Close();
                     }
-                    catch (System.IO.FileNotFoundException ex)
+                    catch (System.IO.FileNotFoundException)
                     {
                         return;
                     }

@@ -1,4 +1,5 @@
-﻿namespace Cookiesound_kari_
+﻿using System;
+namespace Cookiesound_kari_
 {
     partial class Form2
     {
@@ -41,9 +42,9 @@
             this.label1.ForeColor = System.Drawing.Color.SkyBlue;
             this.label1.Location = new System.Drawing.Point(104, 151);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(339, 19);
+            this.label1.Size = new System.Drawing.Size(581, 19);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Connecting IRC chat channel...";
+            this.label1.Text = "Checking for Updates and" + Environment.NewLine + "Connecting IRC chat channel...";
             // 
             // label2
             // 

@@ -45,7 +45,7 @@ namespace Irc
                 //Abort();
                 return;
             }
-            catch (System.FormatException e)
+            catch (System.FormatException)
             {
                 //Abort();
                 return;
