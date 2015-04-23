@@ -122,51 +122,7 @@ namespace Cookiesound_kari_
             if (!ignore && hook == true && (e.KeyChar == (char)Keys.Enter))
             {
                 //EnterやEscapeキーでビープ音が鳴らないようにする
-                e.Handled = true;/*
-                if (label1.Text.ToLower() == "stop")
-                {
-                    Program.engine.StopAllSounds();
-                    if (player_stats)
-                    {
-                        string cmd;
-                        //再生しているWAVEを停止する
-                        cmd = "stop " + aliasName;
-                        mciSendString(cmd, null, 0, IntPtr.Zero);
-                        //閉じる
-                        cmd = "close " + aliasName;
-                        mciSendString(cmd, null, 0, IntPtr.Zero);
-                        player_stats = false;
-                    }
-                }
-                else if (label1.Text.ToLower() == "mute")
-                {
-                    if (mute == false)
-                    {
-                        mute = true;
-                        Program.engine.SoundVolume = 0;
-                        if (player_stats)
-                        {
-                            string cmd;
-                            //再生しているWAVEを停止する
-                            cmd = "stop " + aliasName;
-                            mciSendString(cmd, null, 0, IntPtr.Zero);
-                            //閉じる
-                            cmd = "close " + aliasName;
-                            mciSendString(cmd, null, 0, IntPtr.Zero);
-                            player_stats = false;
-                        }
-                    }
-                    else
-                    {
-                        mute = false;
-                        Program.engine.SoundVolume = (float)((float)other.volume / (float)100);
-
-                    }
-                }
-                else if (Program.files.IndexOf(textBox1.Text, 0) != -1)
-                {
-                    Soundplay(label1.Text.ToLower(), irc.nickname);
-                }*/
+                e.Handled = true;
                 textBox1.Text = label1.Text = "";
                 hook = false;
             }
@@ -190,7 +146,7 @@ namespace Cookiesound_kari_
 
         private void keyboardHook1_KeyboardHooked_1(object sender, KeyboardHookedEventArgs e)
         {
-            if (!ignore && e.UpDown == KeyboardUpDown.Up)
+            if (!ignore && e.UpDown == KeyboardUpDown.Down)
             {
                 if (hook == false && (char)e.KeyCode == h.hookkey[0])//Keys.J)
                 {
@@ -219,12 +175,8 @@ namespace Cookiesound_kari_
                         }
                     }
                     textBox1.Text = label1.Text = "";
-                    //textBox1.Focus();
                 }
-            }
-            else if (!ignore && e.UpDown == KeyboardUpDown.Down)
-            {
-                if (hook == true && e.KeyCode == Keys.Enter)
+                else if (hook == true && e.KeyCode == Keys.Enter)
                 {
                     if (label1.Text.ToLower() == "stop")
                     {
