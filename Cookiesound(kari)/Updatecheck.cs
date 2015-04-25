@@ -31,7 +31,8 @@ namespace Cookiesound_kari_
         {
             string s;
             string str;
-            string currentVer = "0.3.0";
+            string str2;
+            string currentVer = "0.3.1";
             try
             {
                 mre.Reset();
@@ -154,7 +155,6 @@ namespace Cookiesound_kari_
                     }
                     for (int i = 0; i < addcsrs.Count; i++)
                     {
-                        Console.WriteLine("RESULT:{0}", addcsrs[i]);
                         str = System.Text.RegularExpressions.Regex.Replace("" + addcsrs[i], @"_[\w|-|^]+.mp3", "");
                         if (String.Compare(str, currentVer) > 0)
                         {
@@ -179,6 +179,35 @@ namespace Cookiesound_kari_
                             fs.Close();
                             strm.Close();
                         }
+                    }
+
+                    System.Text.RegularExpressions.Match m2 =
+                        System.Text.RegularExpressions.Regex.Match(s, "\"" + @"[\d|.]+_csr_list.txt");
+                    str2 = System.Text.RegularExpressions.Regex.Replace(m2.Value, "\"", "");
+                    str = System.Text.RegularExpressions.Regex.Replace(str2, @"_csr_list.txt", "");
+                    System.Console.WriteLine(m2.Value + str2 + str);
+                    if (String.Compare(str, currentVer) > 0)
+                    {
+                        webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/"+ str2);
+
+                        webres = (System.Net.HttpWebResponse)webreq.GetResponse();
+
+                        strm = webres.GetResponseStream();
+
+                        fs = new System.IO.FileStream("sound/csr/" + System.Text.RegularExpressions.Regex.Replace("csr_list.txt", @"[\d|.]+_", ""), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                        readData = new byte[1024];
+                        for (; ; )
+                        {
+                            int readSize = strm.Read(readData, 0, readData.Length);
+                            if (readSize == 0)
+                            {
+                                break;
+                            }
+                            fs.Write(readData, 0, readSize);
+                        }
+
+                        fs.Close();
+                        strm.Close();
                     }
                 }
                 else

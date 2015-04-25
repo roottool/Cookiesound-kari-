@@ -74,7 +74,6 @@ namespace Cookiesound_kari_
         [STAThread]
         static void Main(string[] args)
         {
-            GetAllFiles(@"./sound", "*.ogg", ref files);
             // ミューテックス生成
             using (System.Threading.Mutex mutex = new System.Threading.Mutex(false, Application.ProductName))
             {
@@ -86,6 +85,7 @@ namespace Cookiesound_kari_
                     checking.Start();
                     uc.mre.WaitOne();
                     checking.Join();
+                    GetAllFiles(@"./sound", "*.ogg", ref files);
                     IrcConnection.Connection(args);
                     Program.res.Start();
                     while (Irc.IrcBot.irc.IsRegistered == false) { }
@@ -117,7 +117,6 @@ namespace Cookiesound_kari_
 
                     Regex reg2 = new Regex("^./sound\\\\csr\\\\|.mp3$");
                     //folderのサブフォルダを取得する
-                    //string[] ds = System.IO.Directory.GetDirectories(folder);
                     string[] ds = System.IO.Directory.GetDirectories(folder);
 
                     //サブフォルダにあるファイルも調べる
@@ -128,11 +127,9 @@ namespace Cookiesound_kari_
                             string[] dfs = System.IO.Directory.GetFiles(d, "*.mp3");
                             for (int i = 0; i < dfs.Length; i++) { dfs[i] = reg2.Replace(dfs[i], ""); }
                             files.AddRange(dfs);
-                            //string dd = reg2.Replace(d, "");
-                            //GetAllFiles(dd, "*.wav", ref files);
                         }
                     }
-                    //GetAllFiles(d, searchPattern, ref files);
+                    //files.Sort();
                 }
                 catch (System.IO.FileNotFoundException)
                 {
