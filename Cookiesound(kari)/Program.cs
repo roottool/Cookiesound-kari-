@@ -136,6 +136,11 @@ namespace Cookiesound_kari_
                     return;
                 }
             }
+            else
+            {
+                MessageBox.Show("Cookiesound(kari).exeと同じフォルダにsoundフォルダが存在しません。");
+                Environment.Exit(0);
+            }
             if (System.IO.File.Exists(@"./mute.txt"))
             {
                 try
