@@ -32,13 +32,13 @@ namespace Cookiesound_kari_
             string s;
             string str;
             string str2;
-            string currentVer = "0.3.3";
+            string currentVer = "0.3.5";
             try
             {
                 mre.Reset();
                 WebClient wc = new WebClient();
-                Stream st = wc.OpenRead("https://www.dropbox.com/sh/vxnv1zltyr7sais/AADhPLLkZbbH7tppr6DXRVHaa?dl=0"); //Debug
-                //Stream st = wc.OpenRead("https://www.dropbox.com/sh/wb47tpk36741rp7/AABEUAPlgnMO8onurQNOvCBta?dl=0"); //main
+                //Stream st = wc.OpenRead("https://www.dropbox.com/sh/vxnv1zltyr7sais/AADhPLLkZbbH7tppr6DXRVHaa?dl=0"); //Debug
+                Stream st = wc.OpenRead("https://www.dropbox.com/sh/wb47tpk36741rp7/AABEUAPlgnMO8onurQNOvCBta?dl=0"); //main
                 StreamReader sr = new StreamReader(st, Encoding.GetEncoding(51932));
 
                 s = sr.ReadToEnd();
@@ -54,8 +54,8 @@ namespace Cookiesound_kari_
                     MessageBox.Show("アップデートがあります。自動更新後に発生するoldファイルは次回起動時に\r\n削除されるのでそのままでお願いします。");
                     //WebRequestを作成 I used a Public folder in Dropbox.
                     System.Net.HttpWebRequest webreq =
-                        (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.4_Cookiesound%28kari%29.exe?dl=0"); //Debug
-                        //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe"); //main
+                        //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.4_Cookiesound%28kari%29.exe?dl=0"); //Debug
+                        (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe"); //main
 
                     //サーバーからの応答を受信するためのWebResponseを取得
                     System.Net.HttpWebResponse webres = (System.Net.HttpWebResponse)webreq.GetResponse();

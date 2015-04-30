@@ -107,7 +107,7 @@ namespace Cookiesound_kari_
                 ignore = true;
                 textBox1.Focus();
             }
-            else if (Program.files.IndexOf(textBox1.Text, 0) != -1)
+            else if (BinarySearch(textBox1.Text) != -1)
             {
                 Soundplay(label1.Text.ToLower(), irc.nickname);
             }
@@ -157,7 +157,7 @@ namespace Cookiesound_kari_
                     }
                     else
                     {
-                        if (Program.files.IndexOf(h.hooksound, 0) != -1)
+                        if (BinarySearch(h.hooksound) != -1)
                         {
                             try
                             {
@@ -223,7 +223,7 @@ namespace Cookiesound_kari_
                         ignore = true;
                         textBox1.Focus();
                     }
-                    else if (Program.files.IndexOf(label1.Text.ToLower(), 0) != -1)
+                    else if (BinarySearch(label1.Text.ToLower()) != -1)
                     {
                         Soundplay(label1.Text.ToLower(), irc.nickname);
                     }
@@ -380,6 +380,21 @@ namespace Cookiesound_kari_
             {
                 this.label2.Text += str;
             }
+        }
+
+        public int BinarySearch(string input)
+        {
+            int head = 0; int half = 0;
+            int tail = Program.files.Count - 1;
+            while (head <= tail)
+            {
+                half = (head + tail) / 2;
+                int result = String.Compare(input, ""+Program.files[half]);
+                if (result == 0) { return 0; }
+                else if (result == 1) { head = half + 1; }
+                else if (result == -1) { tail = half - 1; }
+            }
+            return -1;
         }
     }
 

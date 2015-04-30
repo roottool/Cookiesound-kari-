@@ -111,8 +111,16 @@ namespace Cookiesound_kari_
             {
                 try
                 {
-                    string[] fs = System.IO.Directory.GetFiles(folder, searchPattern);
-                    for (int i = 0; i < fs.Length; i++) { fs[i] = reg.Replace(fs[i], ""); }
+                    string[] fs = System.IO.Directory.GetFiles(folder.ToLower(), searchPattern);
+                    for (int i = 0; i < fs.Length; i++) 
+                    {
+                        if (System.Text.RegularExpressions.Regex.Match(fs[i], @"OGG$").Success)
+                        {
+                            fs[i] = System.Text.RegularExpressions.Regex.Replace(fs[i], "OGG", "ogg");
+                            System.Console.WriteLine(fs[i]);
+                        }
+                        fs[i] = reg.Replace(fs[i].ToLower(), ""); 
+                    }
                     files.AddRange(fs);
 
                     Regex reg2 = new Regex("^./sound\\\\csr\\\\|.mp3$");
@@ -129,7 +137,7 @@ namespace Cookiesound_kari_
                             files.AddRange(dfs);
                         }
                     }
-                    //files.Sort();
+                    files.Sort();
                 }
                 catch (System.IO.FileNotFoundException)
                 {
