@@ -32,7 +32,7 @@ namespace Cookiesound_kari_
             string s;
             string str;
             string str2;
-            string currentVer = "0.3.5";
+            string currentVer = "0.4.0";
             try
             {
                 mre.Reset();
@@ -51,10 +51,10 @@ namespace Cookiesound_kari_
 
                 if (String.Compare(str, currentVer) > 0)
                 {
-                    MessageBox.Show("アップデートがあります。自動更新後に発生するoldファイルは次回起動時に\r\n削除されるのでそのままでお願いします。");
+                    MessageBox.Show("アップデートがあります。自動更新後に再起動を行います。");
                     //WebRequestを作成 I used a Public folder in Dropbox.
                     System.Net.HttpWebRequest webreq =
-                        //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.4_Cookiesound%28kari%29.exe?dl=0"); //Debug
+                        //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.7_Cookiesound%28kari%29.exe?dl=0"); //Debug
                         (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe"); //main
 
                     //サーバーからの応答を受信するためのWebResponseを取得
@@ -63,7 +63,6 @@ namespace Cookiesound_kari_
                     //応答データを受信するためのStreamを取得
                     System.IO.Stream strm = webres.GetResponseStream();
 
-                    System.IO.File.Delete("Cookiesound(kari).old");
                     System.IO.File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
 
                     //ファイルに書き込むためのFileStreamを作成
@@ -223,10 +222,6 @@ namespace Cookiesound_kari_
                         fs.Close();
                         strm.Close();
                     }
-                }
-                else
-                {
-                    System.IO.File.Delete("Cookiesound(kari).old");
                 }
                 mre.Set();
             }

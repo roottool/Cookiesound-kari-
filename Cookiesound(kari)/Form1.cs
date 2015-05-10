@@ -230,7 +230,7 @@ namespace Cookiesound_kari_
                     textBox1.Text = label1.Text = "";
                     hook = false;
                 }
-                else if (hook == true && (Keys.A <= e.KeyCode && e.KeyCode <= Keys.Z || e.KeyCode == Keys.Subtract))
+                else if (hook == true && Keys.A <= e.KeyCode && e.KeyCode <= Keys.Z)
                 {
                     label1.Text += e.KeyCode;
                     //textBox1.Select(textBox1.Text.Length, 0);
@@ -240,7 +240,7 @@ namespace Cookiesound_kari_
                     label1.Text += "^";
                     //textBox1.Select(textBox1.Text.Length, 0);
                 }
-                else if (hook == true && e.KeyCode == Keys.OemMinus)
+                else if (hook == true && e.KeyCode == Keys.OemMinus || e.KeyCode == Keys.Subtract)
                 {
                     label1.Text += "-";
                     //textBox1.Select(textBox1.Text.Length, 0);
@@ -249,6 +249,12 @@ namespace Cookiesound_kari_
                 {
                     label1.Text += e.KeyCode;
                     label1.Text = label1.Text.Remove(label1.Text.Length - 2, 1);
+                    //textBox1.Select(textBox1.Text.Length, 0);
+                }
+                else if (hook == true && Keys.NumPad0 <= e.KeyCode && e.KeyCode <= Keys.NumPad9)
+                {
+                    label1.Text += e.KeyCode;
+                    label1.Text = label1.Text.Remove(label1.Text.Length - 7, 6);
                     //textBox1.Select(textBox1.Text.Length, 0);
                 }
                 else if (hook == true && label1.Text.Length > 0 && e.KeyCode == Keys.Back)

@@ -77,6 +77,19 @@ namespace Cookiesound_kari_
             // ミューテックス生成
             using (System.Threading.Mutex mutex = new System.Threading.Mutex(false, Application.ProductName))
             {
+                if (Environment.CommandLine.IndexOf("/up", StringComparison.CurrentCultureIgnoreCase) != -1)
+                {
+                    try
+                    {
+                        string[] args2 = Environment.GetCommandLineArgs();
+                        int pid = Convert.ToInt32(args2[2]);
+                        System.Diagnostics.Process.GetProcessById(pid).WaitForExit();    // 終了待ち
+                    }
+                    catch (Exception)
+                    {
+                    }
+                    File.Delete("Cookiesound(kari).old");
+                }
                 // 二重起動を禁止する
                 if (mutex.WaitOne(0, false))
                 {
@@ -85,6 +98,11 @@ namespace Cookiesound_kari_
                     checking.Start();
                     uc.mre.WaitOne();
                     checking.Join();
+                    if (System.IO.File.Exists("Cookiesound(kari).old"))
+                    {
+                        System.Diagnostics.Process.Start("Cookiesound(kari).exe", "/up " + System.Diagnostics.Process.GetCurrentProcess().Id);
+                        Environment.Exit(0);
+                    }
                     GetAllFiles(@"./sound", "*.ogg", ref files);
                     IrcConnection.Connection(args);
                     Program.res.Start();
@@ -117,7 +135,6 @@ namespace Cookiesound_kari_
                         if (System.Text.RegularExpressions.Regex.Match(fs[i], @"OGG$").Success)
                         {
                             fs[i] = System.Text.RegularExpressions.Regex.Replace(fs[i], "OGG", "ogg");
-                            System.Console.WriteLine(fs[i]);
                         }
                         fs[i] = reg.Replace(fs[i].ToLower(), ""); 
                     }
