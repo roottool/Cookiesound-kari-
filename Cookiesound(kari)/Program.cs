@@ -33,7 +33,7 @@ namespace Cookiesound_kari_
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form2());
+                Application.Run(new Cookiesound());
             }
             catch (System.Threading.ThreadAbortException)
             {

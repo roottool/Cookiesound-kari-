@@ -15,11 +15,13 @@ namespace Cookiesound_kari_
 {
     class Updatecheck
     {
-        public ManualResetEvent mre;
+        public ManualResetEvent mre; 
+        public string currentVer;
 
         public Updatecheck()
         {
             mre = new ManualResetEvent(false);
+            currentVer = "0.4.1";
         }
 
         // Starts the thread
@@ -32,7 +34,7 @@ namespace Cookiesound_kari_
             string s;
             string str;
             string str2;
-            string currentVer = "0.4.0";
+            
             try
             {
                 mre.Reset();

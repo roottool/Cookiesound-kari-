@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Cookiesound_kari_
 {
-    partial class Form2
+    partial class Cookiesound
     {
         /// <summary>
         /// Required designer variable.
@@ -29,7 +29,7 @@ namespace Cookiesound_kari_
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Cookiesound));
             this.label1 = new System.Windows.Forms.Label();
             this.label2 = new System.Windows.Forms.Label();
             this.SuspendLayout();
@@ -42,9 +42,9 @@ namespace Cookiesound_kari_
             this.label1.ForeColor = System.Drawing.Color.SkyBlue;
             this.label1.Location = new System.Drawing.Point(104, 151);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(581, 19);
+            this.label1.Size = new System.Drawing.Size(339, 38);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Checking for Updates and" + Environment.NewLine + "Connecting IRC chat channel...";
+            this.label1.Text = "Checking for Updates and\r\nConnecting IRC chat channel...";
             // 
             // label2
             // 
@@ -58,7 +58,7 @@ namespace Cookiesound_kari_
             this.label2.TabIndex = 1;
             this.label2.Text = "Cookie☆sound";
             // 
-            // Form2
+            // Cookiesound
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -70,7 +70,7 @@ namespace Cookiesound_kari_
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form2";
+            this.Name = "Cookiesound";
             this.Text = "Form2";
             this.ResumeLayout(false);
             this.PerformLayout();

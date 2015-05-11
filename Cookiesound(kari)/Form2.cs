@@ -10,9 +10,9 @@ using System.Windows.Forms;
 
 namespace Cookiesound_kari_
 {
-    public partial class Form2 : Form
+    public partial class Cookiesound : Form
     {
-        public Form2()
+        public Cookiesound()
         {
             InitializeComponent();
         }
