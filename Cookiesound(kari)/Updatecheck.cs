@@ -17,11 +17,13 @@ namespace Cookiesound_kari_
     {
         public ManualResetEvent mre; 
         public string currentVer;
+        public Boolean dlcomplete;
 
         public Updatecheck()
         {
             mre = new ManualResetEvent(false);
-            currentVer = "0.4.1";
+            currentVer = "0.4.5";
+            dlcomplete = false;
         }
 
         // Starts the thread
@@ -33,7 +35,9 @@ namespace Cookiesound_kari_
         {
             string s;
             string str;
-            string str2;
+            string str_sound;
+            string str_csr;
+            string str_csr_list;
             
             try
             {
@@ -54,48 +58,15 @@ namespace Cookiesound_kari_
                 if (String.Compare(str, currentVer) > 0)
                 {
                     MessageBox.Show("アップデートがあります。自動更新後に再起動を行います。");
-                    //WebRequestを作成 I used a Public folder in Dropbox.
-                    System.Net.HttpWebRequest webreq =
-                        //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.7_Cookiesound%28kari%29.exe?dl=0"); //Debug
-                        (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe"); //main
 
-                    //サーバーからの応答を受信するためのWebResponseを取得
+                    System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/readme.txt");
+
                     System.Net.HttpWebResponse webres = (System.Net.HttpWebResponse)webreq.GetResponse();
 
-                    //応答データを受信するためのStreamを取得
                     System.IO.Stream strm = webres.GetResponseStream();
 
-                    System.IO.File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
-
-                    //ファイルに書き込むためのFileStreamを作成
-                    System.IO.FileStream fs = new System.IO.FileStream("Cookiesound(kari).exe", System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                    //応答データをファイルに書き込む
+                    System.IO.FileStream fs = new System.IO.FileStream("readme.txt", System.IO.FileMode.Create, System.IO.FileAccess.Write);
                     byte[] readData = new byte[1024];
-                    for (; ; )
-                    {
-                        //データを読み込む
-                        int readSize = strm.Read(readData, 0, readData.Length);
-                        if (readSize == 0)
-                        {
-                            //すべてのデータを読み込んだ時
-                            break;
-                        }
-                        //読み込んだデータをファイルに書き込む
-                        fs.Write(readData, 0, readSize);
-                    }
-
-                    //閉じる
-                    fs.Close();
-                    strm.Close();
-
-                    webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/readme.txt");
-
-                    webres = (System.Net.HttpWebResponse)webreq.GetResponse();
-
-                    strm = webres.GetResponseStream();
-
-                    fs = new System.IO.FileStream("readme.txt", System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                    readData = new byte[1024];
                     for (; ; )
                     {
                         int readSize = strm.Read(readData, 0, readData.Length);
@@ -120,8 +91,8 @@ namespace Cookiesound_kari_
                         }
                         for (int i = 0; i < addsounds.Count; i++)
                         {
-                            str = System.Text.RegularExpressions.Regex.Replace("" + addsounds[i], @"_[\w-|^]+.ogg", "");
-                            if (String.Compare(str, currentVer) > 0)
+                            str_sound = System.Text.RegularExpressions.Regex.Replace("" + addsounds[i], @"_[\w-|^]+.ogg", "");
+                            if (String.Compare(str_sound, currentVer) > 0)
                             {
                                 webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + addsounds[i]);
 
@@ -164,8 +135,8 @@ namespace Cookiesound_kari_
                         }
                         for (int i = 0; i < addcsrs.Count; i++)
                         {
-                            str = System.Text.RegularExpressions.Regex.Replace("" + addcsrs[i], @"_[\w|-|^]+.mp3", "");
-                            if (String.Compare(str, currentVer) > 0)
+                            str_csr = System.Text.RegularExpressions.Regex.Replace("" + addcsrs[i], @"_[\w|-|^]+.mp3", "");
+                            if (String.Compare(str_csr, currentVer) > 0)
                             {
                                 webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + addcsrs[i]);
 
@@ -199,11 +170,11 @@ namespace Cookiesound_kari_
 
                     System.Text.RegularExpressions.Match m2 =
                         System.Text.RegularExpressions.Regex.Match(s, "\"" + @"[\d|.]+_csr_list.txt");
-                    str2 = System.Text.RegularExpressions.Regex.Replace(m2.Value, "\"", "");
-                    str = System.Text.RegularExpressions.Regex.Replace(str2, @"_csr_list.txt", "");
-                    if (String.Compare(str, currentVer) > 0)
+                    str_csr_list = System.Text.RegularExpressions.Regex.Replace(m2.Value, "\"", "");
+                    str_csr_list = System.Text.RegularExpressions.Regex.Replace(str_csr_list, @"_csr_list.txt", "");
+                    if (String.Compare(str_csr_list, currentVer) > 0)
                     {
-                        webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/"+ str2);
+                        webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/"+ str_csr_list);
 
                         webres = (System.Net.HttpWebResponse)webreq.GetResponse();
 
@@ -224,6 +195,56 @@ namespace Cookiesound_kari_
                         fs.Close();
                         strm.Close();
                     }
+
+                    System.IO.File.Delete("Cookiesound(kari).old");
+                    System.IO.File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");/*
+                    //WebRequestを作成 I used a Public folder in Dropbox.
+                    webreq =
+                        //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.7_Cookiesound%28kari%29.exe?dl=0"); //Debug
+                        (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe"); //main
+
+                    //サーバーからの応答を受信するためのWebResponseを取得
+                    webres = (System.Net.HttpWebResponse)webreq.GetResponse();
+
+                    //応答データを受信するためのStreamを取得
+                    strm = webres.GetResponseStream();
+
+
+                    //ファイルに書き込むためのFileStreamを作成
+                    fs = new System.IO.FileStream("Cookiesound(kari).exe", System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                    //応答データをファイルに書き込む
+                    readData = new byte[1024];
+                    for (; ; )
+                    {
+                        //データを読み込む
+                        int readSize = strm.Read(readData, 0, readData.Length);
+                        if (readSize == 0)
+                        {
+                            //すべてのデータを読み込んだ時
+                            break;
+                        }
+                        //読み込んだデータをファイルに書き込む
+                        fs.Write(readData, 0, readSize);
+                    }
+
+                    //閉じる
+                    fs.Close();
+                    strm.Close();*/
+                    System.Net.WebClient downloadClient = null;
+                    Uri u = new Uri("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe");
+
+                    //WebClientの作成
+                    if (downloadClient == null)
+                    {
+                        downloadClient = new System.Net.WebClient();
+                        //イベントハンドラの作成
+                        downloadClient.DownloadFileCompleted +=
+                            new System.ComponentModel.AsyncCompletedEventHandler(
+                                downloadClient_DownloadFileCompleted);
+                    }
+                    //非同期ダウンロードを開始する
+                    downloadClient.DownloadFileAsync(u, "Cookiesound(kari).exe");
+                    while (!dlcomplete) { }
                 }
                 mre.Set();
             }
@@ -241,6 +262,20 @@ namespace Cookiesound_kari_
             }
             finally
             {
+            }
+        }
+        private void downloadClient_DownloadFileCompleted(object sender,
+            System.ComponentModel.AsyncCompletedEventArgs e)
+        {
+            if (e.Error != null)
+            {
+                Console.WriteLine("エラー:{0}", e.Error.Message);
+                MessageBox.Show("エラーが発生してダウンロードに失敗しました。\r\noldをexeにリネームをして再度実行してください。");
+                Environment.Exit(0);
+            }
+            else
+            {
+                dlcomplete = true;
             }
         }
     }

@@ -84,11 +84,11 @@ namespace Cookiesound_kari_
                         string[] args2 = Environment.GetCommandLineArgs();
                         int pid = Convert.ToInt32(args2[2]);
                         System.Diagnostics.Process.GetProcessById(pid).WaitForExit();    // 終了待ち
+                        System.IO.File.Delete("Cookiesound(kari).old");
                     }
                     catch (Exception)
                     {
                     }
-                    File.Delete("Cookiesound(kari).old");
                 }
                 // 二重起動を禁止する
                 if (mutex.WaitOne(0, false))
@@ -101,6 +101,9 @@ namespace Cookiesound_kari_
                     if (System.IO.File.Exists("Cookiesound(kari).old"))
                     {
                         System.Diagnostics.Process.Start("Cookiesound(kari).exe", "/up " + System.Diagnostics.Process.GetCurrentProcess().Id);
+                        //Application.Restart();
+                        //mutex.ReleaseMutex();
+                        //System.IO.File.Delete("Cookiesound(kari).old");
                         Environment.Exit(0);
                     }
                     GetAllFiles(@"./sound", "*.ogg", ref files);
@@ -118,6 +121,10 @@ namespace Cookiesound_kari_
 
                     //string stCurrentDir = System.IO.Directory.GetCurrentDirectory();
                     //System.Windows.Forms.MessageBox.Show(stCurrentDir);
+                }
+                else
+                {
+                    MessageBox.Show("二重起動は禁止されています。");
                 }
             }
         }
