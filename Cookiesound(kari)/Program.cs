@@ -33,7 +33,7 @@ namespace Cookiesound_kari_
             {
                 Application.EnableVisualStyles();
                 Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Cookiesound());
+                Application.Run(new Form2());
             }
             catch (System.Threading.ThreadAbortException)
             {
@@ -96,16 +96,7 @@ namespace Cookiesound_kari_
                     ls.Start();
                     Thread checking = new Thread(new ThreadStart(uc.Run));
                     checking.Start();
-                    uc.mre.WaitOne();
                     checking.Join();
-                    if (System.IO.File.Exists("Cookiesound(kari).old"))
-                    {
-                        System.Diagnostics.Process.Start("Cookiesound(kari).exe", "/up " + System.Diagnostics.Process.GetCurrentProcess().Id);
-                        //Application.Restart();
-                        //mutex.ReleaseMutex();
-                        //System.IO.File.Delete("Cookiesound(kari).old");
-                        Environment.Exit(0);
-                    }
                     GetAllFiles(@"./sound", "*.ogg", ref files);
                     IrcConnection.Connection(args);
                     Program.res.Start();

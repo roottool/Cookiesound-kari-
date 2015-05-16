@@ -22,7 +22,7 @@ namespace Cookiesound_kari_
         public Updatecheck()
         {
             mre = new ManualResetEvent(false);
-            currentVer = "0.4.5";
+            currentVer = "0.4.6";
             dlcomplete = false;
         }
 
@@ -41,7 +41,6 @@ namespace Cookiesound_kari_
             
             try
             {
-                mre.Reset();
                 WebClient wc = new WebClient();
                 //Stream st = wc.OpenRead("https://www.dropbox.com/sh/vxnv1zltyr7sais/AADhPLLkZbbH7tppr6DXRVHaa?dl=0"); //Debug
                 Stream st = wc.OpenRead("https://www.dropbox.com/sh/wb47tpk36741rp7/AABEUAPlgnMO8onurQNOvCBta?dl=0"); //main
@@ -197,8 +196,9 @@ namespace Cookiesound_kari_
                     }
 
                     System.IO.File.Delete("Cookiesound(kari).old");
-                    System.IO.File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");/*
-                    //WebRequestを作成 I used a Public folder in Dropbox.
+                    System.IO.File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
+
+                    /*//WebRequestを作成 I used a Public folder in Dropbox.
                     webreq =
                         //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.7_Cookiesound%28kari%29.exe?dl=0"); //Debug
                         (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe"); //main
@@ -244,9 +244,8 @@ namespace Cookiesound_kari_
                     }
                     //非同期ダウンロードを開始する
                     downloadClient.DownloadFileAsync(u, "Cookiesound(kari).exe");
-                    while (!dlcomplete) { }
+                    while (!dlcomplete) {  }
                 }
-                mre.Set();
             }
             catch (System.Net.HttpListenerException)
             {
@@ -270,12 +269,17 @@ namespace Cookiesound_kari_
             if (e.Error != null)
             {
                 Console.WriteLine("エラー:{0}", e.Error.Message);
-                MessageBox.Show("エラーが発生してダウンロードに失敗しました。\r\noldをexeにリネームをして再度実行してください。");
+                System.IO.File.Move("Cookiesound(kari).old", "Cookiesound(kari).exe");
                 Environment.Exit(0);
             }
             else
             {
                 dlcomplete = true;
+                System.Diagnostics.Process.Start("Cookiesound(kari).exe", "/up " + System.Diagnostics.Process.GetCurrentProcess().Id);
+                //Application.Restart();
+                //mutex.ReleaseMutex();
+                //System.IO.File.Delete("Cookiesound(kari).old");
+                Environment.Exit(0);
             }
         }
     }
