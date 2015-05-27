@@ -84,6 +84,7 @@ namespace Cookiesound_kari_
                         string[] args2 = Environment.GetCommandLineArgs();
                         int pid = Convert.ToInt32(args2[2]);
                         System.Diagnostics.Process.GetProcessById(pid).WaitForExit();    // 終了待ち
+                        Thread.Sleep(1000);
                         System.IO.File.Delete("Cookiesound(kari).old");
                     }
                     catch (Exception)
@@ -97,6 +98,16 @@ namespace Cookiesound_kari_
                     Thread checking = new Thread(new ThreadStart(uc.Run));
                     checking.Start();
                     checking.Join();
+                    while (!uc.dlcomplete)
+                    {
+                        if (uc.noupdate)
+                            break;
+                    }
+                    if (uc.dlcomplete)
+                    {
+                        System.Diagnostics.Process.Start("Cookiesound(kari).exe", "/up " + System.Diagnostics.Process.GetCurrentProcess().Id);
+                        Environment.Exit(0);
+                    }
                     GetAllFiles(@"./sound", "*.ogg", ref files);
                     IrcConnection.Connection(args);
                     Program.res.Start();

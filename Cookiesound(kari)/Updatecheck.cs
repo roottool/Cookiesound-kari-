@@ -18,12 +18,14 @@ namespace Cookiesound_kari_
         public ManualResetEvent mre; 
         public string currentVer;
         public Boolean dlcomplete;
+        public Boolean noupdate;
 
         public Updatecheck()
         {
             mre = new ManualResetEvent(false);
-            currentVer = "0.4.6";
+            currentVer = "0.5.0";
             dlcomplete = false;
+            noupdate = false;
         }
 
         // Starts the thread
@@ -54,7 +56,7 @@ namespace Cookiesound_kari_
                 st.Close();
                 wc.Dispose();
 
-                if (String.Compare(str, currentVer) > 0)
+                if (String.Compare(str, currentVer) > 0 || str.Length > currentVer.Length)
                 {
                     MessageBox.Show("アップデートがあります。自動更新後に再起動を行います。");
 
@@ -77,7 +79,7 @@ namespace Cookiesound_kari_
                     }
 
                     fs.Close();
-                    strm.Close();
+                    strm.Close(); 
 
                     if (System.IO.Directory.Exists("sound"))
                     {
@@ -198,38 +200,12 @@ namespace Cookiesound_kari_
                     System.IO.File.Delete("Cookiesound(kari).old");
                     System.IO.File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
 
-                    /*//WebRequestを作成 I used a Public folder in Dropbox.
+                    /*
+                    //WebRequestを作成 I used a Public folder in Dropbox.
                     webreq =
                         //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.7_Cookiesound%28kari%29.exe?dl=0"); //Debug
                         (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe"); //main
-
-                    //サーバーからの応答を受信するためのWebResponseを取得
-                    webres = (System.Net.HttpWebResponse)webreq.GetResponse();
-
-                    //応答データを受信するためのStreamを取得
-                    strm = webres.GetResponseStream();
-
-
-                    //ファイルに書き込むためのFileStreamを作成
-                    fs = new System.IO.FileStream("Cookiesound(kari).exe", System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                    //応答データをファイルに書き込む
-                    readData = new byte[1024];
-                    for (; ; )
-                    {
-                        //データを読み込む
-                        int readSize = strm.Read(readData, 0, readData.Length);
-                        if (readSize == 0)
-                        {
-                            //すべてのデータを読み込んだ時
-                            break;
-                        }
-                        //読み込んだデータをファイルに書き込む
-                        fs.Write(readData, 0, readSize);
-                    }
-
-                    //閉じる
-                    fs.Close();
-                    strm.Close();*/
+                    */
                     System.Net.WebClient downloadClient = null;
                     Uri u = new Uri("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe");
 
@@ -244,7 +220,10 @@ namespace Cookiesound_kari_
                     }
                     //非同期ダウンロードを開始する
                     downloadClient.DownloadFileAsync(u, "Cookiesound(kari).exe");
-                    while (!dlcomplete) {  }
+                }
+                else
+                {
+                    noupdate = true;
                 }
             }
             catch (System.Net.HttpListenerException)
@@ -269,17 +248,13 @@ namespace Cookiesound_kari_
             if (e.Error != null)
             {
                 Console.WriteLine("エラー:{0}", e.Error.Message);
+                System.IO.File.Delete("Cookiesound(kari).exe");
                 System.IO.File.Move("Cookiesound(kari).old", "Cookiesound(kari).exe");
                 Environment.Exit(0);
             }
             else
             {
                 dlcomplete = true;
-                System.Diagnostics.Process.Start("Cookiesound(kari).exe", "/up " + System.Diagnostics.Process.GetCurrentProcess().Id);
-                //Application.Restart();
-                //mutex.ReleaseMutex();
-                //System.IO.File.Delete("Cookiesound(kari).old");
-                Environment.Exit(0);
             }
         }
     }

@@ -156,26 +156,26 @@ namespace Irc
         {
             string extraction = string.Empty;
             System.Console.WriteLine("Received: " + e.Data.RawMessage);
-            System.Text.RegularExpressions.Regex list_r = new System.Text.RegularExpressions.Regex(@"#[\w|-]+ [0-9]+ :$");
+            System.Text.RegularExpressions.Regex list_r = new System.Text.RegularExpressions.Regex(@"#[\w-|~|^]+ [0-9]+ :$");
             System.Text.RegularExpressions.Match list_m = list_r.Match(e.Data.RawMessage);
-            System.Text.RegularExpressions.Regex ignore_r = new System.Text.RegularExpressions.Regex(@" [=|@] #[\w|-]+ :[@|\w]+");
+            System.Text.RegularExpressions.Regex ignore_r = new System.Text.RegularExpressions.Regex(@" [=|@] #[\w-|~|^]+ :[@|\w]+");
             System.Text.RegularExpressions.Match ignore_m = ignore_r.Match(e.Data.RawMessage);
             System.Text.RegularExpressions.Regex already_r = new System.Text.RegularExpressions.Regex(@":Nickname is already in use.$");
             System.Text.RegularExpressions.Match already_m = already_r.Match(e.Data.RawMessage);
             if (list_m.Success)
             {
                 string st = System.Text.RegularExpressions.Regex.Replace(e.Data.RawMessage, @" :$", "");
-                st = System.Text.RegularExpressions.Regex.Replace(st, @"^:[\w|.|-]+ [\d]+ [\w|-]+ #[\w|-]+ ", "");
+                st = System.Text.RegularExpressions.Regex.Replace(st, @"^:[\w-~|.~|^]+ [\d]+ [\w-|~|^]+ #[\w-|~|^]+ ", "");
                 System.Windows.Forms.MessageBox.Show("åªç›É`ÉÉÉìÉlÉãì‡Ç…" + st + "ñºÇ¢Ç‹Ç∑ÅB");
             }
             else if (ignore_m.Success)
             {
                 //if (initialization_completed)
                 //{
-                    string st = System.Text.RegularExpressions.Regex.Replace(e.Data.RawMessage, @"^:[\w|.|-]+ [\d]+ [\w|-]+ [=|@] #[\w|-]+ :", "");
+                string st = System.Text.RegularExpressions.Regex.Replace(e.Data.RawMessage, @"^:[\w-|.~|^]+ [\d]+ [\w-|~|^]+ [=|@] #[\w-|~|^]+ :", "");
                     st = System.Text.RegularExpressions.Regex.Replace(st, @"_ ", " ");
                     st = System.Text.RegularExpressions.Regex.Replace(st, @"^@", "");
-                    System.Text.RegularExpressions.Regex extraction_r = new System.Text.RegularExpressions.Regex(@"^[\w|-]+");
+                    System.Text.RegularExpressions.Regex extraction_r = new System.Text.RegularExpressions.Regex(@"^[\w-|~|^]+");
                     System.Text.RegularExpressions.Match extraction_m = extraction_r.Match(st);
                     Form1.names_array.Clear();
                     //while (st != string.Empty)
@@ -183,7 +183,7 @@ namespace Irc
                     {
                         extraction = extraction_m.Value;
                         Form1.names_array.Add(extraction);
-                        st = System.Text.RegularExpressions.Regex.Replace(st, @"^[\w|-]+ ", "");
+                        st = System.Text.RegularExpressions.Regex.Replace(st, @"^[\w-|~|^]+ ", "");
                         st = System.Text.RegularExpressions.Regex.Replace(st, @"^@", "");
                         extraction_m = extraction_r.Match(st);
                     }
@@ -218,7 +218,7 @@ namespace Irc
             irc.OnError += new ErrorEventHandler(OnError);
             irc.OnRawMessage += new IrcEventHandler(OnRawMessage);
             string server = irc_server.address;//"irc.ircnet.ne.jp";
-            int port = irc_server.port;//6667;
+            int port = irc_server.port;//6664;
             string channel = irc_server.channel;// "#cookie_channel";
             try
             {
