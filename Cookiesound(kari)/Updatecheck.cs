@@ -23,7 +23,7 @@ namespace Cookiesound_kari_
         public Updatecheck()
         {
             mre = new ManualResetEvent(false);
-            currentVer = "0.5.0";
+            currentVer = "0.5.5";
             dlcomplete = false;
             noupdate = false;
         }
@@ -56,9 +56,20 @@ namespace Cookiesound_kari_
                 st.Close();
                 wc.Dispose();
 
-                if (String.Compare(str, currentVer) > 0 || str.Length > currentVer.Length)
+                DateTime rewirte_keyboardhook_time = new DateTime(2015, 11, 9, 0, 0, 0);
+
+                if (String.Compare(str, currentVer) > 0 || str.Length > currentVer.Length || System.IO.File.GetLastWriteTime("KeyboardHooked.dll").CompareTo(rewirte_keyboardhook_time) < 0)
                 {
                     MessageBox.Show("アップデートがあります。自動更新後に再起動を行います。");
+
+                    if (System.IO.File.GetLastWriteTime("KeyboardHooked.dll").CompareTo(rewirte_keyboardhook_time) < 0)
+                    {
+                        System.Net.WebClient KeyboardHooked_dll_wc = new System.Net.WebClient();
+                        System.IO.File.Delete("KeyboardHooked.old");
+                        System.IO.File.Move("KeyboardHooked.dll", "KeyboardHooked.old");
+                        KeyboardHooked_dll_wc.DownloadFile("https://dl.dropboxusercontent.com/u/37080107/KeyboardHooked.dll", "KeyboardHooked.dll");
+                        KeyboardHooked_dll_wc.Dispose();
+                    }
 
                     System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/readme.txt");
 
@@ -93,7 +104,7 @@ namespace Cookiesound_kari_
                         for (int i = 0; i < addsounds.Count; i++)
                         {
                             str_sound = System.Text.RegularExpressions.Regex.Replace("" + addsounds[i], @"_[\w-|^]+.ogg", "");
-                            if (String.Compare(str_sound, currentVer) > 0)
+                            if (String.Compare(str_sound, currentVer) > 0 || str_sound.Length > currentVer.Length)
                             {
                                 webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + addsounds[i]);
 
@@ -137,7 +148,7 @@ namespace Cookiesound_kari_
                         for (int i = 0; i < addcsrs.Count; i++)
                         {
                             str_csr = System.Text.RegularExpressions.Regex.Replace("" + addcsrs[i], @"_[\w|-|^]+.mp3", "");
-                            if (String.Compare(str_csr, currentVer) > 0)
+                            if (String.Compare(str_csr, currentVer) > 0 || str_csr.Length > currentVer.Length)
                             {
                                 webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + addcsrs[i]);
 
@@ -250,7 +261,6 @@ namespace Cookiesound_kari_
                 Console.WriteLine("エラー:{0}", e.Error.Message);
                 System.IO.File.Delete("Cookiesound(kari).exe");
                 System.IO.File.Move("Cookiesound(kari).old", "Cookiesound(kari).exe");
-                Environment.Exit(0);
             }
             else
             {

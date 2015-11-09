@@ -84,12 +84,13 @@ namespace Cookiesound_kari_
                         string[] args2 = Environment.GetCommandLineArgs();
                         int pid = Convert.ToInt32(args2[2]);
                         System.Diagnostics.Process.GetProcessById(pid).WaitForExit();    // 終了待ち
-                        Thread.Sleep(1000);
-                        System.IO.File.Delete("Cookiesound(kari).old");
                     }
                     catch (Exception)
                     {
                     }
+                    Thread.Sleep(1000);
+                    System.IO.File.Delete("Cookiesound(kari).old");
+                    System.IO.File.Delete("KeyboardHooked.old");
                 }
                 // 二重起動を禁止する
                 if (mutex.WaitOne(0, false))

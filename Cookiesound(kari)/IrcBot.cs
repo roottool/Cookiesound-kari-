@@ -166,7 +166,7 @@ namespace Irc
             {
                 string st = System.Text.RegularExpressions.Regex.Replace(e.Data.RawMessage, @" :$", "");
                 st = System.Text.RegularExpressions.Regex.Replace(st, @"^:[\w-~|.~|^]+ [\d]+ [\w-|~|^]+ #[\w-|~|^]+ ", "");
-                System.Windows.Forms.MessageBox.Show("åªç›É`ÉÉÉìÉlÉãì‡Ç…" + st + "ñºÇ¢Ç‹Ç∑ÅB");
+                System.Windows.Forms.MessageBox.Show("The number of members is " + st + ".");
             }
             else if (ignore_m.Success)
             {
