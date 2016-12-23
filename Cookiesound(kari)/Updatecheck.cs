@@ -23,7 +23,7 @@ namespace Cookiesound_kari_
         public Updatecheck()
         {
             mre = new ManualResetEvent(false);
-            currentVer = "0.5.5";
+            currentVer = Application.ProductVersion;
             dlcomplete = false;
             noupdate = false;
         }
@@ -44,8 +44,9 @@ namespace Cookiesound_kari_
             try
             {
                 WebClient wc = new WebClient();
-                //Stream st = wc.OpenRead("https://www.dropbox.com/sh/vxnv1zltyr7sais/AADhPLLkZbbH7tppr6DXRVHaa?dl=0"); //Debug
-                Stream st = wc.OpenRead("https://www.dropbox.com/sh/wb47tpk36741rp7/AABEUAPlgnMO8onurQNOvCBta?dl=0"); //main
+                //Stream st = wc.OpenRead("https://www.dropbox.com/sh/vxnv1zltyr7sais/AADhPLLkZbbH7tppr6DXRVHaa?dl=0"); //bkDebug
+                //Stream st = wc.OpenRead("https://www.dropbox.com/sh/wb47tpk36741rp7/AABEUAPlgnMO8onurQNOvCBta?dl=0"); //Debug
+                Stream st = wc.OpenRead("https://www.dropbox.com/sh/ryqu51l1y8mokwo/AAAmZm3p6FyGei7qatiO1xTLa?dl=0");//main
                 StreamReader sr = new StreamReader(st, Encoding.GetEncoding(51932));
 
                 s = sr.ReadToEnd();
@@ -67,11 +68,11 @@ namespace Cookiesound_kari_
                         System.Net.WebClient KeyboardHooked_dll_wc = new System.Net.WebClient();
                         System.IO.File.Delete("KeyboardHooked.old");
                         System.IO.File.Move("KeyboardHooked.dll", "KeyboardHooked.old");
-                        KeyboardHooked_dll_wc.DownloadFile("https://dl.dropboxusercontent.com/u/37080107/KeyboardHooked.dll", "KeyboardHooked.dll");
+                        KeyboardHooked_dll_wc.DownloadFile("https://cookiesound-4de19.firebaseapp.com/KeyboardHooked.dll", "KeyboardHooked.dll");
                         KeyboardHooked_dll_wc.Dispose();
                     }
 
-                    System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/readme.txt");
+                    System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/readme.txt");
 
                     System.Net.HttpWebResponse webres = (System.Net.HttpWebResponse)webreq.GetResponse();
 
@@ -106,7 +107,7 @@ namespace Cookiesound_kari_
                             str_sound = System.Text.RegularExpressions.Regex.Replace("" + addsounds[i], @"_[\w-|^]+.ogg", "");
                             if (String.Compare(str_sound, currentVer) > 0 || str_sound.Length > currentVer.Length)
                             {
-                                webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + addsounds[i]);
+                                webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + addsounds[i]);
 
                                 webres = (System.Net.HttpWebResponse)webreq.GetResponse();
 
@@ -150,7 +151,7 @@ namespace Cookiesound_kari_
                             str_csr = System.Text.RegularExpressions.Regex.Replace("" + addcsrs[i], @"_[\w|-|^]+.mp3", "");
                             if (String.Compare(str_csr, currentVer) > 0 || str_csr.Length > currentVer.Length)
                             {
-                                webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + addcsrs[i]);
+                                webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + addcsrs[i]);
 
                                 webres = (System.Net.HttpWebResponse)webreq.GetResponse();
 
@@ -186,7 +187,7 @@ namespace Cookiesound_kari_
                     str_csr_list = System.Text.RegularExpressions.Regex.Replace(str_csr_list, @"_csr_list.txt", "");
                     if (String.Compare(str_csr_list, currentVer) > 0)
                     {
-                        webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/"+ str_csr_list);
+                        webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + str_csr_list);
 
                         webres = (System.Net.HttpWebResponse)webreq.GetResponse();
 
@@ -210,15 +211,9 @@ namespace Cookiesound_kari_
 
                     System.IO.File.Delete("Cookiesound(kari).old");
                     System.IO.File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
-
-                    /*
-                    //WebRequestを作成 I used a Public folder in Dropbox.
-                    webreq =
-                        //(System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://www.dropbox.com/s/izgznijak4fj1f5/0.3.7_Cookiesound%28kari%29.exe?dl=0"); //Debug
-                        (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe"); //main
-                    */
+                    
                     System.Net.WebClient downloadClient = null;
-                    Uri u = new Uri("https://dl.dropboxusercontent.com/u/37080107/" + str + "_Cookiesound(kari).exe");
+                    Uri u = new Uri("https://cookiesound-4de19.firebaseapp.com/" + str + "_Cookiesound(kari).exe");
 
                     //WebClientの作成
                     if (downloadClient == null)

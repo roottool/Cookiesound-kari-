@@ -63,3 +63,5 @@ using System.Runtime.InteropServices;
 [assembly: AssemblyDelaySign(false)]
 [assembly: AssemblyKeyFile("")]
 [assembly: AssemblyKeyName("")]
+[assembly: AssemblyFileVersion("0.6.1")]
+
