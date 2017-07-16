@@ -89,8 +89,8 @@ namespace Cookiesound_kari_
                     {
                     }
                     Thread.Sleep(1000);
-                    System.IO.File.Delete("Cookiesound(kari).old");
-                    System.IO.File.Delete("KeyboardHooked.old");
+                    File.Delete("Cookiesound(kari).old");
+                    File.Delete("KeyboardHooked.old");
                 }
                 // 二重起動を禁止する
                 if (mutex.WaitOne(0, false))
@@ -176,7 +176,7 @@ namespace Cookiesound_kari_
                 MessageBox.Show("Cookiesound(kari).exeと同じフォルダにsoundフォルダが存在しません。");
                 Environment.Exit(0);
             }
-            if (System.IO.File.Exists(@"./mute.txt"))
+            if (File.Exists(@"./mute.txt"))
             {
                 try
                 {
@@ -197,7 +197,7 @@ namespace Cookiesound_kari_
                     return;
                 }
             }
-            if (System.IO.File.Exists(@"./ignore.txt"))
+            if (File.Exists(@"./ignore.txt"))
             {
                 try
                 {

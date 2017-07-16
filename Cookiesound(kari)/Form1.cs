@@ -395,7 +395,7 @@ namespace Cookiesound_kari_
             while (head <= tail)
             {
                 half = (head + tail) / 2;
-                int result = String.Compare(input, ""+Program.files[half]);
+                int result = string.Compare(input, ""+Program.files[half]);
                 if (result == 0) { return 0; }
                 else if (result == 1) { head = half + 1; }
                 else if (result == -1) { tail = half - 1; }
