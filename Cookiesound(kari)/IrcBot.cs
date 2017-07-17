@@ -5,6 +5,7 @@ using System.Collections.Generic;
 using Cookiesound_kari_;
 using Meebey.SmartIrc4net;
 using System.Text;
+using System.Windows.Forms;
 
 namespace Irc
 {
@@ -228,7 +229,7 @@ namespace Irc
             catch (ConnectionException e)
             {
                 // something went wrong, the reason will be shown
-                System.Console.WriteLine("couldn't connect! Reason: " + e.Message);
+                MessageBox.Show("ê⁄ë±èoóàÇ‹ÇπÇÒÇ≈ÇµÇΩ \nå¥àˆ: " + e.Message);
                 Exit();
             }
             try
@@ -258,17 +259,19 @@ namespace Irc
                 // disconnect manually
                 //irc.Disconnect();
             }
-            catch (ConnectionException)
+            catch (ConnectionException e)
             {
                 // this exception is handled because Disconnect() can throw a not
                 // connected exception
+                MessageBox.Show("ê⁄ë±èoóàÇ‹ÇπÇÒÇ≈ÇµÇΩ \nå¥àˆ: " + e.Message);
                 Exit();
             }
             catch (Exception e)
             {
                 // this should not happen by just in case we handle it nicely
-                System.Console.WriteLine("Error occurred! Message: " + e.Message);
-                System.Console.WriteLine("Exception: " + e.StackTrace);
+                MessageBox.Show("ê⁄ë±èoóàÇ‹ÇπÇÒÇ≈ÇµÇΩ \nå¥àˆ: " + e.Message);
+                //System.Console.WriteLine("Error occurred! Message: " + e.Message);
+                //System.Console.WriteLine("Exception: " + e.StackTrace);
                 Exit();
             }
         }

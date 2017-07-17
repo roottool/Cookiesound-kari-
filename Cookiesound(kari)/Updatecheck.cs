@@ -32,10 +32,15 @@ namespace Cookiesound_kari_
         private string str_sound;
         private string str_csr;
         private string str_csr_list;
+        private string str_cfg;
         private MatchCollection mc;
         private List<string> addsounds;
         private MatchCollection mc2;
         private List<string> addcsrs;
+        System.Net.WebClient downloadClient;
+        Uri u;
+        Match m2;
+        Match m3;
 
         public Updatecheck()
         {
@@ -77,10 +82,13 @@ namespace Cookiesound_kari_
                 wc.Dispose();
 
                 DateTime rewirte_keyboardhook_time = new DateTime(2015, 11, 9, 0, 0, 0);
+                DateTime rewirte_ConfigEditor_time = new DateTime(2017, 7, 17, 0, 0, 0);
 
-                if (currentmajorVer < str_major || File.GetLastWriteTime("KeyboardHooked.dll").CompareTo(rewirte_keyboardhook_time) < 0
-                   || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                   || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                if (File.GetLastWriteTime("KeyboardHooked.dll").CompareTo(rewirte_keyboardhook_time) < 0
+                    || File.GetLastWriteTime("ConfigEditor.exe").CompareTo(rewirte_ConfigEditor_time) < 0
+                    || currentmajorVer < str_major
+                    || (currentmajorVer >= str_major && currentminorVer < str_minor)
+                    || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
                 {
                     MessageBox.Show("アップデートがあります。自動更新後に再起動を行います。");
 
@@ -92,13 +100,45 @@ namespace Cookiesound_kari_
                         KeyboardHooked_dll_wc.DownloadFile("https://cookiesound-4de19.firebaseapp.com/KeyboardHooked.dll", "KeyboardHooked.dll");
                         KeyboardHooked_dll_wc.Dispose();
                     }
+                    
+                    //ConfigEditorの更新チェックと更新
+                    m3 = Regex.Match(s, "\"" + @"[\d|.]+_ConfigEditor.exe");
+                    str_cfg = Regex.Replace(m3.Value, "\"", "");
+                    str_cfg = Regex.Replace(str_cfg, @"_ConfigEditor.exe", "");
+                    str_major = int.Parse(Regex.Replace(str_cfg, @".[\d]+.[\d]+$", ""));
+                    str_minor_tmpstr = Regex.Replace(str_cfg, @"^[\d]+.", "");
+                    str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
+                    str_build_number = int.Parse(Regex.Replace(str_cfg, @"^[\d]+.[\d]+.", ""));
+                    if (currentmajorVer < str_major || File.GetLastWriteTime("ConfigEditor.exe").CompareTo(rewirte_ConfigEditor_time) < 0
+                        || (currentmajorVer >= str_major && currentminorVer < str_minor)
+                        || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                    {
+                        //System.Net.WebClient ConfigEditor_exe_wc = new System.Net.WebClient();
+                        File.Delete("ConfigEditor.old");
+                        File.Move("ConfigEditor.exe", "ConfigEditor.old");
 
+                        downloadClient = null;
+                        u = new Uri("https://cookiesound-4de19.firebaseapp.com/" + str_cfg + "_ConfigEditor.exe");
+                        File.Delete("ConfigEditor.old");
+
+                        //WebClientの作成
+                        if (downloadClient == null)
+                        {
+                            downloadClient = new System.Net.WebClient();
+                            //イベントハンドラの作成
+                            downloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(downloadClient_DownloadFileCompleted);
+                        }
+                        //非同期ダウンロードを開始する
+                        downloadClient.DownloadFileAsync(u, "ConfigEditor.exe");
+
+                        //ConfigEditor_exe_wc.DownloadFile("https://cookiesound-4de19.firebaseapp.com/" + str_cfg, "ConfigEditor.exe");
+                        //ConfigEditor_exe_wc.Dispose();
+                    }
+
+                    //readmeの更新
                     System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/readme.txt");
-
                     HttpWebResponse webres = (HttpWebResponse)webreq.GetResponse();
-
                     Stream strm = webres.GetResponseStream();
-
                     System.IO.FileStream fs = new System.IO.FileStream("readme.txt", System.IO.FileMode.Create, System.IO.FileAccess.Write);
                     byte[] readData = new byte[1024];
                     for (; ; )
@@ -110,7 +150,6 @@ namespace Cookiesound_kari_
                         }
                         fs.Write(readData, 0, readSize);
                     }
-
                     fs.Close();
                     strm.Close(); 
 
@@ -211,7 +250,7 @@ namespace Cookiesound_kari_
 
                     }
 
-                    Match m2 = Regex.Match(s, "\"" + @"[\d|.]+_csr_list.txt");
+                    m2 = Regex.Match(s, "\"" + @"[\d|.]+_csr_list.txt");
                     str_csr_list = Regex.Replace(m2.Value, "\"", "");
                     str_csr_list = Regex.Replace(str_csr_list, @"_csr_list.txt", "");
                     str_major = int.Parse(Regex.Replace(str_csr_list, @".[\d]+.[\d]+$", ""));
@@ -244,20 +283,19 @@ namespace Cookiesound_kari_
                         strm.Close();
                     }
 
+                    //本体の更新
                     File.Delete("Cookiesound(kari).old");
                     File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
-                    
-                    System.Net.WebClient downloadClient = null;
-                    Uri u = new Uri("https://cookiesound-4de19.firebaseapp.com/" + str + "_Cookiesound(kari).exe");
+
+                    downloadClient = null;
+                    u = new Uri("https://cookiesound-4de19.firebaseapp.com/" + str + "_Cookiesound(kari).exe");
 
                     //WebClientの作成
                     if (downloadClient == null)
                     {
                         downloadClient = new System.Net.WebClient();
                         //イベントハンドラの作成
-                        downloadClient.DownloadFileCompleted +=
-                            new System.ComponentModel.AsyncCompletedEventHandler(
-                                downloadClient_DownloadFileCompleted);
+                        downloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(downloadClient_DownloadFileCompleted);
                     }
                     //非同期ダウンロードを開始する
                     downloadClient.DownloadFileAsync(u, "Cookiesound(kari).exe");

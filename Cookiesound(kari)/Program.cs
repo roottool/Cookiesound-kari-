@@ -8,6 +8,7 @@ using IrrKlang;
 using System.Text.RegularExpressions;
 using System.IO;
 using System.Threading;
+using System.Runtime.InteropServices;
 
 namespace Cookiesound_kari_
 {
@@ -15,15 +16,15 @@ namespace Cookiesound_kari_
 
     class LoadScreen
     {
-        private static Thread loading;
+        private static System.Threading.Thread loading;
 
         public LoadScreen ()
         {
-                loading = new Thread(new ThreadStart(this.Run));
+                loading = new System.Threading.Thread(new ThreadStart(this.Run));
         }
 
-	    // Starts the thread
-	    public void Start () 
+        // Starts the thread
+        public void Start () 
 	    {
                 loading.Start(); 
 	    }
@@ -41,6 +42,11 @@ namespace Cookiesound_kari_
             finally
             {
             }
+        }
+        internal void Abort()
+        {
+            loading.Abort();
+            Application.Exit();
         }
     }
 
@@ -74,6 +80,13 @@ namespace Cookiesound_kari_
         [STAThread]
         static void Main(string[] args)
         {
+            // Register the IOleMessageFilter to handle any threading 
+            // errors.
+            MessageFilter.Register();
+
+            // =====================================
+            // ==Insert your automation code here.==
+            // =====================================
             // ミューテックス生成
             using (System.Threading.Mutex mutex = new System.Threading.Mutex(false, Application.ProductName))
             {
@@ -88,15 +101,17 @@ namespace Cookiesound_kari_
                     catch (Exception)
                     {
                     }
-                    Thread.Sleep(1000);
+                    System.Threading.Thread.Sleep(1000);
+                    //更新前の旧ファイルを削除
                     File.Delete("Cookiesound(kari).old");
                     File.Delete("KeyboardHooked.old");
+                    File.Delete("ConfigEditor.old");
                 }
                 // 二重起動を禁止する
                 if (mutex.WaitOne(0, false))
                 {
                     ls.Start();
-                    Thread checking = new Thread(new ThreadStart(uc.Run));
+                    System.Threading.Thread checking = new System.Threading.Thread(new ThreadStart(uc.Run));
                     checking.Start();
                     checking.Join();
                     while (!uc.dlcomplete)
@@ -113,8 +128,9 @@ namespace Cookiesound_kari_
                     IrcConnection.Connection(args);
                     Program.res.Start();
                     while (Irc.IrcBot.irc.IsRegistered == false) { }
-                    Application.Exit();
-                    Thread.Sleep(1000);
+                    //Application.Exit();
+                    ls.Abort();
+                    System.Threading.Thread.Sleep(1000);
                     Form1.Form1Instance = f;
 
                     //Application.EnableVisualStyles();
@@ -129,6 +145,10 @@ namespace Cookiesound_kari_
                 {
                     MessageBox.Show("二重起動は禁止されています。");
                 }
+                // =====================================
+                
+                // turn off the IOleMessageFilter.
+                MessageFilter.Revoke();
             }
         }
 
