@@ -3,6 +3,7 @@ using System.ComponentModel;
 using System.Diagnostics;
 using System.Runtime.InteropServices;
 using System.Windows.Forms;
+
 namespace HongliangSoft.Utilities.Gui
 {
     ///<summary>キーボードが操作されたときに実行されるメソッドを表すイベントハンドラ。</summary>

@@ -35,7 +35,7 @@
             this.textBox2 = new System.Windows.Forms.TextBox();
             this.label3 = new System.Windows.Forms.Label();
             this.textBox3 = new System.Windows.Forms.TextBox();
-            this.button1 = new System.Windows.Forms.Button();
+            this.Savebutton = new System.Windows.Forms.Button();
             this.label4 = new System.Windows.Forms.Label();
             this.textBox4 = new System.Windows.Forms.TextBox();
             this.label5 = new System.Windows.Forms.Label();
@@ -88,6 +88,7 @@
             this.textBox2.ForeColor = System.Drawing.SystemColors.WindowText;
             this.textBox2.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.textBox2.Location = new System.Drawing.Point(115, 63);
+            this.textBox2.MaxLength = 5;
             this.textBox2.Name = "textBox2";
             this.textBox2.Size = new System.Drawing.Size(127, 19);
             this.textBox2.TabIndex = 3;
@@ -115,15 +116,15 @@
             this.textBox3.TabIndex = 5;
             this.textBox3.Text = "#cookie_channel";
             // 
-            // button1
+            // Savebutton
             // 
-            this.button1.Location = new System.Drawing.Point(-1, 360);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(257, 43);
-            this.button1.TabIndex = 6;
-            this.button1.Text = "保存";
-            this.button1.UseVisualStyleBackColor = true;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.Savebutton.Location = new System.Drawing.Point(-1, 360);
+            this.Savebutton.Name = "Savebutton";
+            this.Savebutton.Size = new System.Drawing.Size(257, 43);
+            this.Savebutton.TabIndex = 6;
+            this.Savebutton.Text = "保存";
+            this.Savebutton.UseVisualStyleBackColor = true;
+            this.Savebutton.Click += new System.EventHandler(this.Savebutton_Click);
             // 
             // label4
             // 
@@ -162,10 +163,12 @@
             // 
             this.textBox5.ImeMode = System.Windows.Forms.ImeMode.Disable;
             this.textBox5.Location = new System.Drawing.Point(115, 163);
+            this.textBox5.MaxLength = 1;
             this.textBox5.Name = "textBox5";
             this.textBox5.Size = new System.Drawing.Size(126, 19);
             this.textBox5.TabIndex = 10;
             this.textBox5.Text = "j";
+            this.textBox5.TextChanged += new System.EventHandler(this.textBox5_TextChanged);
             // 
             // label6
             // 
@@ -261,7 +264,7 @@
             this.Controls.Add(this.label5);
             this.Controls.Add(this.textBox4);
             this.Controls.Add(this.label4);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.Savebutton);
             this.Controls.Add(this.textBox3);
             this.Controls.Add(this.label3);
             this.Controls.Add(this.textBox2);
@@ -288,7 +291,7 @@
         private System.Windows.Forms.TextBox textBox2;
         private System.Windows.Forms.Label label3;
         private System.Windows.Forms.TextBox textBox3;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button Savebutton;
         private System.Windows.Forms.Label label4;
         private System.Windows.Forms.TextBox textBox4;
         private System.Windows.Forms.Label label5;
