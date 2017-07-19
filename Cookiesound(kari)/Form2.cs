@@ -1,11 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace Cookiesound_kari_
@@ -44,8 +37,10 @@ namespace Cookiesound_kari_
             }
         }
 
+        //Omake
         private void button1_Click(object sender, EventArgs e)
         {
+            //When the user push the play button, Cookie☆ is played.
             if (System.IO.File.Exists("sound/csr/csr0.mp3"))
             {
                 _wmp.URL = "./sound/csr/csr0.mp3";

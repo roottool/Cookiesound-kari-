@@ -103,11 +103,11 @@
   <ItemGroup>
     <Reference Include="irrKlang.NET4, Version=1.0.5235.21387, Culture=neutral, processorArchitecture=AMD64">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath>bin\irrKlang.NET4.dll</HintPath>
+      <HintPath>Resources\irrKlang.NET4.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="Meebey.SmartIrc4net">
-      <HintPath>bin\Meebey.SmartIrc4net.dll</HintPath>
+      <HintPath>Resources\Meebey.SmartIrc4net.dll</HintPath>
       <EmbedInteropTypes>False</EmbedInteropTypes>
     </Reference>
     <Reference Include="System" />

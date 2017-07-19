@@ -14,42 +14,6 @@ namespace Cookiesound_kari_
 {
     using IrcConnection = Irc.IrcBot;
 
-    class LoadScreen
-    {
-        private static System.Threading.Thread loading;
-
-        public LoadScreen ()
-        {
-                loading = new System.Threading.Thread(new ThreadStart(this.Run));
-        }
-
-        // Starts the thread
-        public void Start () 
-	    {
-                loading.Start(); 
-	    }
-        public void Run()
-        {
-            try
-            {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form2());
-            }
-            catch (System.Threading.ThreadAbortException)
-            {
-            }
-            finally
-            {
-            }
-        }
-        internal void Abort()
-        {
-            loading.Abort();
-            Application.Exit();
-        }
-    }
-
     class Program
     {
         public static ArrayList files;
@@ -57,7 +21,6 @@ namespace Cookiesound_kari_
         // start the sound engine with default parameters
         public static ISoundEngine engine;
         public static Irc.resive res;
-        public static LoadScreen ls;
         public static Updatecheck uc;
         public static Form1 f;
 
@@ -65,12 +28,11 @@ namespace Cookiesound_kari_
         {
             files = new ArrayList();
             ignores = new ArrayList();
-            // start the sound engine with default parameters
-            engine = new ISoundEngine();
             res = new Irc.resive();
-            ls = new LoadScreen();
             uc = new Updatecheck();
             f = new Form1();
+            // start the sound engine with default parameters
+            engine = new ISoundEngine();
         }
 
         /// <summary>
@@ -78,7 +40,7 @@ namespace Cookiesound_kari_
         /// </summary>
         /// 
         [STAThread]
-        static void Main(string[] args)
+        static void Main (string[] args)
         {
             // Register the IOleMessageFilter to handle any threading 
             // errors.
@@ -110,46 +72,63 @@ namespace Cookiesound_kari_
                 // 二重起動を禁止する
                 if (mutex.WaitOne(0, false))
                 {
-                    ls.Start();
-                    System.Threading.Thread checking = new System.Threading.Thread(new ThreadStart(uc.Run));
-                    checking.Start();
-                    checking.Join();
+                    var currentContext = TaskScheduler.FromCurrentSynchronizationContext();
+                    ShowloadscreenAsync();
+                    //uc.UpdatecheckAsync();
+                    /*
                     while (!uc.dlcomplete)
                     {
                         if (uc.noupdate)
                             break;
-                    }
-                    if (uc.dlcomplete)
+                    }*/
+                    Task.WaitAny(uc.UpdatecheckAsync());
+                    if (uc.dlcomplete && !uc.noupdate)
                     {
+                        Application.Exit();
+                        if (IrcConnection.irc.IsConnected)
+                        {
+                            IrcConnection.irc.Disconnect();
+                        }
                         System.Diagnostics.Process.Start("Cookiesound(kari).exe", "/up " + System.Diagnostics.Process.GetCurrentProcess().Id);
                         Environment.Exit(0);
                     }
                     GetAllFiles(@"./sound", "*.ogg", ref files);
+                    //IRC接続のTask化
                     IrcConnection.Connection(args);
                     Program.res.Start();
                     while (Irc.IrcBot.irc.IsRegistered == false) { }
-                    //Application.Exit();
-                    ls.Abort();
-                    System.Threading.Thread.Sleep(1000);
+                    Application.Exit();
+                    //Task.Delay(1000);
+                    //System.Threading.Thread.Sleep(1000);
                     Form1.Form1Instance = f;
-
-                    //Application.EnableVisualStyles();
-                    //Application.SetCompatibleTextRenderingDefault(false);
                     Application.Run(f);
-                    //Application.Run(new Form1());
-
-                    //string stCurrentDir = System.IO.Directory.GetCurrentDirectory();
-                    //System.Windows.Forms.MessageBox.Show(stCurrentDir);
                 }
                 else
                 {
                     MessageBox.Show("二重起動は禁止されています。");
                 }
                 // =====================================
-                
+
                 // turn off the IOleMessageFilter.
                 MessageFilter.Revoke();
             }
+        }
+
+        private static async void ShowloadscreenAsync()
+        {
+            await Task.Run(() =>
+            {
+            try
+            {
+                Application.EnableVisualStyles();
+                Application.SetCompatibleTextRenderingDefault(false);
+                Application.Run(new Form2());
+            }
+            catch (System.Threading.ThreadAbortException){
+            }
+            finally{
+                }
+            });
         }
 
         public static void GetAllFiles(string folder, string searchPattern, ref ArrayList files)

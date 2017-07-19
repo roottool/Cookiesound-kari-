@@ -12,13 +12,15 @@ namespace Irc
     // Empty constructor makes instance of Thread
 	class resive
     {
-        private Boolean checkpoint = false;
         private static Thread res;
-        Other other = Ini.Read<Other>("Other", "config.ini");
+        private Boolean checkpoint;
+        Other other;
 
         public resive ()
         {
             res = new Thread(new ThreadStart(this.Run));
+            checkpoint = false;
+            other = Ini.Read<Other>("Other", "config.ini");
         }
 	    // Starts the thread
 	    public void Start () 

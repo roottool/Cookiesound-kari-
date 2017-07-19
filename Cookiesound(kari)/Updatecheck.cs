@@ -39,6 +39,11 @@ namespace Cookiesound_kari_
         private List<string> addcsrs;
         System.Net.WebClient downloadClient;
         Uri u;
+        System.Net.HttpWebRequest webreq;
+        HttpWebResponse webres;
+        Stream strm;
+        System.IO.FileStream fs;
+        byte[] readData;
         Match m2;
         Match m3;
 
@@ -54,12 +59,7 @@ namespace Cookiesound_kari_
             noupdate = false;
         }
 
-        // Starts the thread
-        /*public void Start()
-        {
-            checking.Start();
-        }*/
-        public void Run()
+        public async Task UpdatecheckAsync()
         {
             try
             {
@@ -100,7 +100,7 @@ namespace Cookiesound_kari_
                         KeyboardHooked_dll_wc.DownloadFile("https://cookiesound-4de19.firebaseapp.com/KeyboardHooked.dll", "KeyboardHooked.dll");
                         KeyboardHooked_dll_wc.Dispose();
                     }
-                    
+
                     //ConfigEditorの更新チェックと更新
                     m3 = Regex.Match(s, "\"" + @"[\d|.]+_ConfigEditor.exe");
                     str_cfg = Regex.Replace(m3.Value, "\"", "");
@@ -130,58 +130,140 @@ namespace Cookiesound_kari_
                         }
                         //非同期ダウンロードを開始する
                         downloadClient.DownloadFileAsync(u, "ConfigEditor.exe");
-
-                        //ConfigEditor_exe_wc.DownloadFile("https://cookiesound-4de19.firebaseapp.com/" + str_cfg, "ConfigEditor.exe");
-                        //ConfigEditor_exe_wc.Dispose();
                     }
-
                     //readmeの更新
-                    System.Net.HttpWebRequest webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/readme.txt");
-                    HttpWebResponse webres = (HttpWebResponse)webreq.GetResponse();
-                    Stream strm = webres.GetResponseStream();
-                    System.IO.FileStream fs = new System.IO.FileStream("readme.txt", System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                    byte[] readData = new byte[1024];
-                    for (; ; )
-                    {
-                        int readSize = strm.Read(readData, 0, readData.Length);
-                        if (readSize == 0)
-                        {
-                            break;
-                        }
-                        fs.Write(readData, 0, readSize);
-                    }
-                    fs.Close();
-                    strm.Close(); 
+                    downloadClient = null;
+                    u = new Uri("https://cookiesound-4de19.firebaseapp.com/readme.txt");
 
-                    if (System.IO.Directory.Exists("sound"))
+                    //WebClientの作成
+                    if (downloadClient == null)
                     {
-                        mc = Regex.Matches(s, "\"filename\": \"" + @"[\d|.]+_[\w-|^]+.ogg");
-                        addsounds = new List<string>();
-                        foreach (Match m in mc)
+                        downloadClient = new System.Net.WebClient();
+                        //イベントハンドラの作成
+                        downloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(downloadClient_DownloadFileCompleted);
+                    }
+                    //非同期ダウンロードを開始する
+                    downloadClient.DownloadFileAsync(u, "readme.txt");
+
+                    await Task.Run(() =>
+                    {
+                        if (System.IO.Directory.Exists("sound"))
                         {
-                            str_sound = Regex.Replace(m.Groups[0].Value, "\"filename\": \"", "");
-                            str_sound = Regex.Replace(str_sound, @"_[\w-|^]+.ogg", "");
-                            str_sound = Regex.Replace(str_sound, "\"", "");
-                            str_major = int.Parse(Regex.Replace(str_sound, @".[\d]+.[\d]+$", ""));
-                            str_minor_tmpstr = Regex.Replace(str_sound, @"^[\d]+.", "");
-                            str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
-                            str_build_number = int.Parse(Regex.Replace(str_sound, @"^[\d]+.[\d]+.", ""));
-                            if (currentmajorVer < str_major
-                                || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                                || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                            mc = Regex.Matches(s, "\"filename\": \"" + @"[\d|.]+_[\w-|^]+.ogg");
+                            addsounds = new List<string>();
+                            foreach (Match m in mc)
                             {
-                                addsounds.Add(Regex.Replace(m.Groups[0].Value, "\"filename\": \"", ""));
+                                str_sound = Regex.Replace(m.Groups[0].Value, "\"filename\": \"", "");
+                                str_sound = Regex.Replace(str_sound, @"_[\w-|^]+.ogg", "");
+                                str_sound = Regex.Replace(str_sound, "\"", "");
+                                str_major = int.Parse(Regex.Replace(str_sound, @".[\d]+.[\d]+$", ""));
+                                str_minor_tmpstr = Regex.Replace(str_sound, @"^[\d]+.", "");
+                                str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
+                                str_build_number = int.Parse(Regex.Replace(str_sound, @"^[\d]+.[\d]+.", ""));
+                                if (currentmajorVer < str_major
+                                    || (currentmajorVer >= str_major && currentminorVer < str_minor)
+                                    || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                                {
+                                    addsounds.Add(Regex.Replace(m.Groups[0].Value, "\"filename\": \"", ""));
+                                }
+                            }
+                            for (int i = 0; i < addsounds.Count; i++)
+                            {
+                                webreq = (HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + addsounds[i]);
+                                webres = (HttpWebResponse)webreq.GetResponse();
+                                strm = webres.GetResponseStream();
+
+                                fs = new System.IO.FileStream("sound/" + Regex.Replace("" + addsounds[i], @"[\d|.]+_", ""), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                                readData = new byte[1024];
+                                for (;;)
+                                {
+                                    int readSize = strm.Read(readData, 0, readData.Length);
+                                    if (readSize == 0)
+                                    {
+                                        break;
+                                    }
+                                    fs.Write(readData, 0, readSize);
+                                }
+
+                                fs.Close();
+                                strm.Close();
                             }
                         }
-                        for (int i = 0; i < addsounds.Count; i++)
+                        else
                         {
-                            webreq = (HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + addsounds[i]);
+                            MessageBox.Show("Cookiesound(kari).exeと同じフォルダにsoundフォルダが存在しません。");
+                            Environment.Exit(0);
+                        }
+
+                        if (System.IO.Directory.Exists("sound/csr"))
+                        {
+                            mc2 = Regex.Matches(s, "\"" + @"[\d|.]+_[\w|-|^]+.mp3");
+                            addcsrs = new List<string>();
+                            foreach (Match m in mc2)
+                            {
+                                str_csr = Regex.Replace("" + m.Groups[0].Value, "\"filename\": \"", "");
+                                str_csr = Regex.Replace("" + str_csr, @"_[\w|-|^]+.mp3", "");
+                                str_csr = Regex.Replace(str_csr, "\"", "");
+                                str_major = int.Parse(Regex.Replace(str_csr, @".[\d]+.[\d]+$", ""));
+                                str_minor_tmpstr = Regex.Replace(str_csr, @"^[\d]+.", "");
+                                str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
+                                str_build_number = int.Parse(Regex.Replace(str_csr, @"^[\d]+.[\d]+.", ""));
+                                if (currentmajorVer < str_major
+                                    || (currentmajorVer >= str_major && currentminorVer < str_minor)
+                                    || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                                {
+                                    addcsrs.Add(Regex.Replace(m.Groups[0].Value, "\"filename\": \"", ""));
+                                }
+                            }
+                            for (int i = 0; i < addcsrs.Count; i++)
+                            {
+                                webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + addcsrs[i]);
+                                webres = (HttpWebResponse)webreq.GetResponse();
+                                strm = webres.GetResponseStream();
+
+                                fs = new System.IO.FileStream("sound/csr/" + Regex.Replace("" + addcsrs[i], @"[\d|.]+_", ""), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                                readData = new byte[1024];
+                                for (;;)
+                                {
+                                    int readSize = strm.Read(readData, 0, readData.Length);
+                                    if (readSize == 0)
+                                    {
+                                        break;
+                                    }
+                                    fs.Write(readData, 0, readSize);
+                                }
+
+                                fs.Close();
+                                strm.Close();
+                            }
+                        }
+                        else
+                        {
+                            MessageBox.Show("soundフォルダ内にcsrフォルダが存在しません。");
+                            Environment.Exit(0);
+
+                        }
+
+                        m2 = Regex.Match(s, "\"" + @"[\d|.]+_csr_list.txt");
+                        str_csr_list = Regex.Replace(m2.Value, "\"", "");
+                        str_csr_list = Regex.Replace(str_csr_list, @"_csr_list.txt", "");
+                        str_major = int.Parse(Regex.Replace(str_csr_list, @".[\d]+.[\d]+$", ""));
+                        str_minor_tmpstr = Regex.Replace(str_csr_list, @"^[\d]+.", "");
+                        str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
+                        str_build_number = int.Parse(Regex.Replace(str_csr_list, @"^[\d]+.[\d]+.", ""));
+                        if (currentmajorVer < str_major
+                            || (currentmajorVer >= str_major && currentminorVer < str_minor)
+                            || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                        {
+                            webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + str_csr_list);
+
                             webres = (HttpWebResponse)webreq.GetResponse();
+
                             strm = webres.GetResponseStream();
 
-                            fs = new System.IO.FileStream("sound/" + Regex.Replace("" + addsounds[i], @"[\d|.]+_", ""), System.IO.FileMode.Create, System.IO.FileAccess.Write);
+                            fs = new System.IO.FileStream("sound/csr/" + Regex.Replace("csr_list.txt", @"[\d|.]+_", ""), System.IO.FileMode.Create, System.IO.FileAccess.Write);
                             readData = new byte[1024];
-                            for (; ; )
+                            for (;;)
                             {
                                 int readSize = strm.Read(readData, 0, readData.Length);
                                 if (readSize == 0)
@@ -194,96 +276,11 @@ namespace Cookiesound_kari_
                             fs.Close();
                             strm.Close();
                         }
-                    }
-                    else 
-                    {
-                        MessageBox.Show("Cookiesound(kari).exeと同じフォルダにsoundフォルダが存在しません。");
-                        Environment.Exit(0);
-                    }
-
-                    if (System.IO.Directory.Exists("sound/csr"))
-                    {
-                        mc2 = Regex.Matches(s, "\"" + @"[\d|.]+_[\w|-|^]+.mp3");
-                        addcsrs = new List<string>();
-                        foreach (Match m in mc2)
-                        {
-                            str_csr = Regex.Replace("" + m.Groups[0].Value, "\"filename\": \"", "");
-                            str_csr = Regex.Replace("" + str_csr, @"_[\w|-|^]+.mp3", "");
-                            str_csr = Regex.Replace(str_csr, "\"", "");
-                            str_major = int.Parse(Regex.Replace(str_csr, @".[\d]+.[\d]+$", ""));
-                            str_minor_tmpstr = Regex.Replace(str_csr, @"^[\d]+.", "");
-                            str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
-                            str_build_number = int.Parse(Regex.Replace(str_csr, @"^[\d]+.[\d]+.", ""));
-                            if (currentmajorVer < str_major
-                                || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                                || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
-                            {
-                                addcsrs.Add(Regex.Replace(m.Groups[0].Value, "\"filename\": \"", ""));
-                            }
-                        }
-                        for (int i = 0; i < addcsrs.Count; i++)
-                        {
-                            webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + addcsrs[i]);
-                            webres = (HttpWebResponse)webreq.GetResponse();
-                            strm = webres.GetResponseStream();
-
-                            fs = new System.IO.FileStream("sound/csr/" + Regex.Replace("" + addcsrs[i], @"[\d|.]+_", ""), System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                            readData = new byte[1024];
-                            for (; ; )
-                            {
-                                int readSize = strm.Read(readData, 0, readData.Length);
-                                if (readSize == 0)
-                                {
-                                    break;
-                                }
-                                fs.Write(readData, 0, readSize);
-                            }
-
-                            fs.Close();
-                            strm.Close();
-                        }
-                    }
-                    else
-                    {
-                        MessageBox.Show("soundフォルダ内にcsrフォルダが存在しません。");
-                        Environment.Exit(0);
-
-                    }
-
-                    m2 = Regex.Match(s, "\"" + @"[\d|.]+_csr_list.txt");
-                    str_csr_list = Regex.Replace(m2.Value, "\"", "");
-                    str_csr_list = Regex.Replace(str_csr_list, @"_csr_list.txt", "");
-                    str_major = int.Parse(Regex.Replace(str_csr_list, @".[\d]+.[\d]+$", ""));
-                    str_minor_tmpstr = Regex.Replace(str_csr_list, @"^[\d]+.", "");
-                    str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
-                    str_build_number = int.Parse(Regex.Replace(str_csr_list, @"^[\d]+.[\d]+.", ""));
-                    if (currentmajorVer < str_major
-                        || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                        || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
-                    {
-                        webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + str_csr_list);
-
-                        webres = (HttpWebResponse)webreq.GetResponse();
-
-                        strm = webres.GetResponseStream();
-
-                        fs = new System.IO.FileStream("sound/csr/" + Regex.Replace("csr_list.txt", @"[\d|.]+_", ""), System.IO.FileMode.Create, System.IO.FileAccess.Write);
-                        readData = new byte[1024];
-                        for (; ; )
-                        {
-                            int readSize = strm.Read(readData, 0, readData.Length);
-                            if (readSize == 0)
-                            {
-                                break;
-                            }
-                            fs.Write(readData, 0, readSize);
-                        }
-
-                        fs.Close();
-                        strm.Close();
-                    }
+                    }).ConfigureAwait(false);
 
                     //本体の更新
+                    Checkcookiesound();
+                    /*
                     File.Delete("Cookiesound(kari).old");
                     File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
 
@@ -299,9 +296,12 @@ namespace Cookiesound_kari_
                     }
                     //非同期ダウンロードを開始する
                     downloadClient.DownloadFileAsync(u, "Cookiesound(kari).exe");
+                    */
+                    dlcomplete = true;
                 }
                 else
                 {
+                    dlcomplete = true;
                     noupdate = true;
                 }
             }
@@ -321,14 +321,49 @@ namespace Cookiesound_kari_
             {
             }
         }
+        
+        /// <summary>
+        /// Cookie☆sound本体の更新チェックと更新
+        /// </summary>
+        private void Checkcookiesound()
+        {
+            //現在のファイルをoldファイルに変更
+            File.Delete("Cookiesound(kari).old");
+            File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
+
+            downloadClient = null;
+            u = new Uri("https://cookiesound-4de19.firebaseapp.com/" + str + "_Cookiesound(kari).exe");
+
+            //WebClientの作成
+            if (downloadClient == null)
+            {
+                downloadClient = new System.Net.WebClient();
+                //イベントハンドラの作成
+                downloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(downloadClient_DownloadFileCompleted);
+            }
+            //非同期ダウンロードを開始する
+            downloadClient.DownloadFileAsync(u, "Cookiesound(kari).exe");
+        }
+
+        /// <summary>
+        /// ダウンロード完了時イベント
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void downloadClient_DownloadFileCompleted(object sender,
             System.ComponentModel.AsyncCompletedEventArgs e)
         {
+            //エラー処理
             if (e.Error != null)
             {
                 Console.WriteLine("エラー:{0}", e.Error.Message);
+
+                //oldファイルに変更した現在のファイルをexeファイルに差し戻す
+                File.Delete("ConfigEditor.exe");
+                File.Move("ConfigEditor.old", "ConfigEditor.exe");
                 File.Delete("Cookiesound(kari).exe");
                 File.Move("Cookiesound(kari).old", "Cookiesound(kari).exe");
+                dlcomplete = false;
             }
             else
             {
