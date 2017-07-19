@@ -118,15 +118,17 @@ namespace Cookiesound_kari_
         {
             await Task.Run(() =>
             {
-            try
-            {
-                Application.EnableVisualStyles();
-                Application.SetCompatibleTextRenderingDefault(false);
-                Application.Run(new Form2());
-            }
-            catch (System.Threading.ThreadAbortException){
-            }
-            finally{
+                try
+                {
+                    Application.EnableVisualStyles();
+                    Application.SetCompatibleTextRenderingDefault(false);
+                    Application.Run(new Form2());
+                }
+                catch (System.Threading.ThreadAbortException)
+                {
+                }
+                finally
+                {
                 }
             });
         }

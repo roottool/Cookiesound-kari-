@@ -182,6 +182,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Resources\549f5e1212f4a.ico" />
+    <None Include="Resources\logo.png" />
     <None Include="Resources\cookie20150527_2.png" />
     <None Include="Resources\cookie20150527.png" />
   </ItemGroup>

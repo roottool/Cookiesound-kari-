@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Drawing;
 using System.Windows.Forms;
 
 namespace Cookiesound_kari_
@@ -6,6 +7,7 @@ namespace Cookiesound_kari_
     public partial class Form2 : Form
     {
         private readonly dynamic _wmp = Activator.CreateInstance(Type.GetTypeFromProgID("WMPlayer.OCX.7"));
+
         public Form2()
         {
             InitializeComponent();
