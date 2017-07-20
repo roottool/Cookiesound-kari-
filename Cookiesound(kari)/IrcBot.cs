@@ -4,29 +4,18 @@ using System.Collections;
 using Cookiesound_kari_;
 using Meebey.SmartIrc4net;
 using System.Windows.Forms;
-using System.Threading.Tasks;
 
 namespace Irc
 {
     // Empty constructor makes instance of Thread
 	class resive
     {
-        //private static Thread res;
         private Boolean checkpoint;
-        //Other other;
         
         public resive ()
         {
-            //res = new Thread(new ThreadStart(this.Run));
             checkpoint = false;
-            //other = Ini.Read<Other>("Other", "config.ini");
-        }/*
-	    // Starts the thread
-	    public void Start () 
-	    {
-            res.Start(); 
-	    }
-        public void Run() */
+        }
         public async Task ListenMessageAsync()
         {
             await Task.Run(() =>
@@ -43,23 +32,18 @@ namespace Irc
                 }
                 catch (System.Threading.ThreadAbortException)
                 {
-                    //Abort();
                     return;
                 }
                 catch (System.FormatException)
                 {
-                    //Abort();
                     return;
                 }
                 finally
                 {
                 }
             });
-        }/*
-        internal void Abort()
-        {
-            res.Abort();
-        }*/
+        }
+
         private async void OnChannelMessage(object sender, IrcEventArgs e)
         {
             if (!checkpoint) checkpoint = true;
@@ -216,9 +200,9 @@ namespace Irc
             irc.OnQueryMessage += new IrcEventHandler(OnQueryMessage);
             irc.OnError += new ErrorEventHandler(OnError);
             irc.OnRawMessage += new IrcEventHandler(OnRawMessage);
-            string server = irc_server.address;//"irc.ircnet.ne.jp";
-            int port = irc_server.port;//6664;
-            string channel = irc_server.channel;// "#cookie_channel";
+            string server = irc_server.address;         //"irc.ircnet.ne.jp";
+            int port = irc_server.port;                 //6664;
+            string channel = irc_server.channel;        //"#cookie_channel";
             try
             {
                 // here we try to connect to the server and exceptions get handled

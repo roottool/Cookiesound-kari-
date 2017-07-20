@@ -125,18 +125,7 @@ namespace Cookiesound_kari_
                     }
 
                     //readmeの更新
-                    downloadClient = null;
-                    u = new Uri("https://cookiesound-4de19.firebaseapp.com/readme.txt");
-
-                    //WebClientの作成
-                    if (downloadClient == null)
-                    {
-                        downloadClient = new System.Net.WebClient();
-                        //イベントハンドラの作成
-                        downloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(downloadClient_DownloadFileCompleted);
-                    }
-                    //非同期ダウンロードを開始する
-                    downloadClient.DownloadFileAsync(u, "readme.txt");
+                    Updatereadme();
 
                     await Task.Run(() =>
                     {
@@ -298,11 +287,30 @@ namespace Cookiesound_kari_
             {
             }
         }
-        
+
         /// <summary>
-        /// Cookie☆sound本体の更新チェックと更新
+        /// readmeの更新
         /// </summary>
-        private void Checkcookiesound()
+        private void Updatereadme()
+        {
+            downloadClient = null;
+            u = new Uri("https://cookiesound-4de19.firebaseapp.com/readme.txt");
+
+            //WebClientの作成
+            if (downloadClient == null)
+            {
+                downloadClient = new System.Net.WebClient();
+                //イベントハンドラの作成
+                downloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(downloadClient_DownloadFileCompleted);
+            }
+            //非同期ダウンロードを開始する
+            downloadClient.DownloadFileAsync(u, "readme.txt");
+        }
+
+            /// <summary>
+            /// Cookie☆sound本体の更新チェックと更新
+            /// </summary>
+            private void Checkcookiesound()
         {
             //現在のファイルをoldファイルに変更
             File.Delete("Cookiesound(kari).old");
