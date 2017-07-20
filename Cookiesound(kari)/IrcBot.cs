@@ -1,10 +1,8 @@
 using System;
 using System.Threading;
 using System.Collections;
-using System.Collections.Generic;
 using Cookiesound_kari_;
 using Meebey.SmartIrc4net;
-using System.Text;
 using System.Windows.Forms;
 
 namespace Irc
@@ -38,19 +36,15 @@ namespace Irc
                 // need that does one IRC operation and then returns, so you need then
                 // an own loop
                 IrcBot.irc.Listen();
-                /*while (!finish)
-                {
-                    IrcBot.irc.ListenOnce();
-                }*/
             }
             catch (System.Threading.ThreadAbortException)
             {
-                //Abort();
+                Abort();
                 return;
             }
             catch (System.FormatException)
             {
-                //Abort();
+                Abort();
                 return;
             }
             finally
@@ -60,7 +54,6 @@ namespace Irc
         internal void Abort()
         {
             res.Abort();
-            //res.Join();
         }
         private void OnChannelMessage(object sender, IrcEventArgs e)
         {
@@ -72,7 +65,6 @@ namespace Irc
                 {
                     Form1.Form1Instance.Soundplay(e.Data.Message, e.Data.Nick.Remove(e.Data.Nick.Length - 1, 1));
                 }
-                //Form1.Form1Instance.label2.Text = e.Data.Nick + " : " + e.Data.Message;
             }
         }
     }
@@ -240,7 +232,6 @@ namespace Irc
                 irc.Login(irc_server.nickname + "_", "Cookiesound");
                 // join the channel
                 irc.RfcJoin(channel);
-                //Thread.Sleep(45000);
                 /*for (int i = 0; i < 3; i++)
                 {
                     // here we send just 3 different types of messages, 3 times for

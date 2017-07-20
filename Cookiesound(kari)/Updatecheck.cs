@@ -1,12 +1,9 @@
 ﻿using System;
-using System.Collections;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Text.RegularExpressions;
 using System.Net;
-using System.Net.Sockets;
 using System.IO;
 using System.Threading;
 using System.Text;
@@ -280,23 +277,7 @@ namespace Cookiesound_kari_
 
                     //本体の更新
                     Checkcookiesound();
-                    /*
-                    File.Delete("Cookiesound(kari).old");
-                    File.Move("Cookiesound(kari).exe", "Cookiesound(kari).old");
 
-                    downloadClient = null;
-                    u = new Uri("https://cookiesound-4de19.firebaseapp.com/" + str + "_Cookiesound(kari).exe");
-
-                    //WebClientの作成
-                    if (downloadClient == null)
-                    {
-                        downloadClient = new System.Net.WebClient();
-                        //イベントハンドラの作成
-                        downloadClient.DownloadFileCompleted += new System.ComponentModel.AsyncCompletedEventHandler(downloadClient_DownloadFileCompleted);
-                    }
-                    //非同期ダウンロードを開始する
-                    downloadClient.DownloadFileAsync(u, "Cookiesound(kari).exe");
-                    */
                     dlcomplete = true;
                 }
                 else
@@ -359,10 +340,16 @@ namespace Cookiesound_kari_
                 Console.WriteLine("エラー:{0}", e.Error.Message);
 
                 //oldファイルに変更した現在のファイルをexeファイルに差し戻す
-                File.Delete("ConfigEditor.exe");
-                File.Move("ConfigEditor.old", "ConfigEditor.exe");
-                File.Delete("Cookiesound(kari).exe");
-                File.Move("Cookiesound(kari).old", "Cookiesound(kari).exe");
+                if (File.Exists("ConfigEditor.old"))
+                {
+                    File.Delete("ConfigEditor.exe");
+                    File.Move("ConfigEditor.old", "ConfigEditor.exe");
+                }
+                if (File.Exists("Cookiesound(kari).old"))
+                {
+                    File.Delete("Cookiesound(kari).exe");
+                    File.Move("Cookiesound(kari).old", "Cookiesound(kari).exe");
+                }
                 dlcomplete = false;
             }
             else

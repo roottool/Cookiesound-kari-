@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using IrrKlang;
 using System.Text.RegularExpressions;
 using System.IO;
-using System.Threading;
-using System.Runtime.InteropServices;
 
 namespace Cookiesound_kari_
 {
@@ -63,7 +59,6 @@ namespace Cookiesound_kari_
                     catch (Exception)
                     {
                     }
-                    System.Threading.Thread.Sleep(1000);
                     //更新前の旧ファイルを削除
                     File.Delete("Cookiesound(kari).old");
                     File.Delete("KeyboardHooked.old");
@@ -74,13 +69,6 @@ namespace Cookiesound_kari_
                 {
                     var currentContext = TaskScheduler.FromCurrentSynchronizationContext();
                     ShowloadscreenAsync();
-                    //uc.UpdatecheckAsync();
-                    /*
-                    while (!uc.dlcomplete)
-                    {
-                        if (uc.noupdate)
-                            break;
-                    }*/
                     Task.WaitAny(uc.UpdatecheckAsync());
                     if (uc.dlcomplete && !uc.noupdate)
                     {
@@ -93,13 +81,10 @@ namespace Cookiesound_kari_
                         Environment.Exit(0);
                     }
                     GetAllFiles(@"./sound", "*.ogg", ref files);
-                    //IRC接続のTask化
                     IrcConnection.Connection(args);
                     Program.res.Start();
                     while (Irc.IrcBot.irc.IsRegistered == false) { }
                     Application.Exit();
-                    //Task.Delay(1000);
-                    //System.Threading.Thread.Sleep(1000);
                     Form1.Form1Instance = f;
                     Application.Run(f);
                 }
