@@ -14,11 +14,11 @@ namespace Cookiesound_kari_
     {
         public static ArrayList files;
         public static ArrayList ignores;
-        // start the sound engine with default parameters
-        public static ISoundEngine engine;
         public static Irc.resive res;
         public static Updatecheck uc;
         public static Form1 f;
+        // start the sound engine with default parameters
+        public static ISoundEngine engine;
 
         static Program()
         {
@@ -59,10 +59,6 @@ namespace Cookiesound_kari_
                     catch (Exception)
                     {
                     }
-                    //更新前の旧ファイルを削除
-                    //File.Delete("Cookiesound(kari).old");
-                    //File.Delete("KeyboardHooked.old");
-                    //File.Delete("ConfigEditor.old");
                 }
                 // 二重起動を禁止する
                 if (mutex.WaitOne(0, false))
@@ -79,7 +75,6 @@ namespace Cookiesound_kari_
                         IrcConnection.ConnectionAync(args)
                     };
                     Task.WaitAll(tasks);
-                    //Task.WaitAny(uc.UpdatecheckAsync());
                     if (uc.dlcomplete && !uc.noupdate)
                     {
                         Application.Exit();
@@ -91,8 +86,8 @@ namespace Cookiesound_kari_
                         Environment.Exit(0);
                     }
                     GetAllFiles(@"./sound", "*.ogg", ref files);
-                    //IrcConnection.Connection(args);
-                    Program.res.Start();
+                    res.ListenMessageAsync();
+                    //Program.res.Start();
                     while (Irc.IrcBot.irc.IsRegistered == false) { }
                     Application.Exit();
                     Form1.Form1Instance = f;

@@ -1,5 +1,5 @@
 using System;
-using System.Threading;
+using System.Threading.Tasks;
 using System.Collections;
 using Cookiesound_kari_;
 using Meebey.SmartIrc4net;
@@ -11,52 +11,56 @@ namespace Irc
     // Empty constructor makes instance of Thread
 	class resive
     {
-        private static Thread res;
+        //private static Thread res;
         private Boolean checkpoint;
-        Other other;
-
+        //Other other;
+        
         public resive ()
         {
-            res = new Thread(new ThreadStart(this.Run));
+            //res = new Thread(new ThreadStart(this.Run));
             checkpoint = false;
-            other = Ini.Read<Other>("Other", "config.ini");
-        }
+            //other = Ini.Read<Other>("Other", "config.ini");
+        }/*
 	    // Starts the thread
 	    public void Start () 
 	    {
             res.Start(); 
 	    }
-        public void Run() 
+        public void Run() */
+        public async Task ListenMessageAsync()
         {
-            try
+            await Task.Run(() =>
             {
-                IrcBot.irc.OnChannelMessage += new IrcEventHandler(OnChannelMessage);
-                // here we tell the IRC API to go into a receive mode, all events
-                // will be triggered by _this_ thread (main thread in this case)
-                // Listen() blocks by default, you can also use ListenOnce() if you
-                // need that does one IRC operation and then returns, so you need then
-                // an own loop
-                IrcBot.irc.Listen();
-            }
-            catch (System.Threading.ThreadAbortException)
-            {
-                Abort();
-                return;
-            }
-            catch (System.FormatException)
-            {
-                Abort();
-                return;
-            }
-            finally
-            {
-            }
-        }
+                try
+                {
+                    IrcBot.irc.OnChannelMessage += new IrcEventHandler(OnChannelMessage);
+                    // here we tell the IRC API to go into a receive mode, all events
+                    // will be triggered by _this_ thread (main thread in this case)
+                    // Listen() blocks by default, you can also use ListenOnce() if you
+                    // need that does one IRC operation and then returns, so you need then
+                    // an own loop
+                    IrcBot.irc.Listen();
+                }
+                catch (System.Threading.ThreadAbortException)
+                {
+                    //Abort();
+                    return;
+                }
+                catch (System.FormatException)
+                {
+                    //Abort();
+                    return;
+                }
+                finally
+                {
+                }
+            });
+        }/*
         internal void Abort()
         {
             res.Abort();
-        }
-        private void OnChannelMessage(object sender, IrcEventArgs e)
+        }*/
+        private async void OnChannelMessage(object sender, IrcEventArgs e)
         {
             if (!checkpoint) checkpoint = true;
             else
@@ -201,7 +205,6 @@ namespace Irc
         }
         public static async Task ConnectionAync(string[] args)
         {
-            //Thread.CurrentThread.Name = "Connection";
             var irc_server = Ini.Read<Irc.Irc_server>("Irc_server","config.ini");
             irc.Encoding = System.Text.Encoding.GetEncoding("ISO-2022-JP");
             // wait time between messages, we can set this lower on own irc servers
@@ -264,8 +267,6 @@ namespace Irc
             {
                 // this should not happen by just in case we handle it nicely
                 MessageBox.Show("ê⁄ë±èoóàÇ‹ÇπÇÒÇ≈ÇµÇΩ \nå¥àˆ: " + e.Message);
-                //System.Console.WriteLine("Error occurred! Message: " + e.Message);
-                //System.Console.WriteLine("Exception: " + e.StackTrace);
                 Exit();
             }
         }

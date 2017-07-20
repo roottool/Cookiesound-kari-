@@ -22,7 +22,7 @@ namespace Cookiesound_kari_
         Irc_server irc = Ini.Read<Irc_server>("Irc_server", "config.ini");
         Hook h = Ini.Read<Hook>("Hook", "config.ini");
         Other other = Ini.Read<Other>("Other", "config.ini");
-        Irc.resive res;
+        //Irc.resive res;
 
         private readonly dynamic _wmp = Activator.CreateInstance(Type.GetTypeFromProgID("WMPlayer.OCX.7"));
         private Boolean player_stats = false;
@@ -298,7 +298,7 @@ namespace Cookiesound_kari_
         private void Form1_Load(object sender, EventArgs e)
         {
             Form1.Form1Instance = this;
-            res = Program.res;
+            //res = Program.res;
             Program.engine.SoundVolume = (float)((float)other.volume / (float)100);
             _wmp.settings.volume = other.volume;
         }
@@ -312,7 +312,7 @@ namespace Cookiesound_kari_
             }
             // Close all streams
             IrcConnection.irc.Disconnect();
-            res.Abort();
+            //res.Abort();
         }
 
         public void Soundplay(string filename, string nickname)
