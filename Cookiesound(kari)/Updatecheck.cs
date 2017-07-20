@@ -110,13 +110,8 @@ namespace Cookiesound_kari_
                         || (currentmajorVer >= str_major && currentminorVer < str_minor)
                         || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
                     {
-                        //System.Net.WebClient ConfigEditor_exe_wc = new System.Net.WebClient();
-                        File.Delete("ConfigEditor.old");
-                        File.Move("ConfigEditor.exe", "ConfigEditor.old");
-
                         downloadClient = null;
                         u = new Uri("https://cookiesound-4de19.firebaseapp.com/" + str_cfg + "_ConfigEditor.exe");
-                        File.Delete("ConfigEditor.old");
 
                         //WebClientの作成
                         if (downloadClient == null)
@@ -128,6 +123,7 @@ namespace Cookiesound_kari_
                         //非同期ダウンロードを開始する
                         downloadClient.DownloadFileAsync(u, "ConfigEditor.exe");
                     }
+
                     //readmeの更新
                     downloadClient = null;
                     u = new Uri("https://cookiesound-4de19.firebaseapp.com/readme.txt");

@@ -60,16 +60,26 @@ namespace Cookiesound_kari_
                     {
                     }
                     //更新前の旧ファイルを削除
-                    File.Delete("Cookiesound(kari).old");
-                    File.Delete("KeyboardHooked.old");
-                    File.Delete("ConfigEditor.old");
+                    //File.Delete("Cookiesound(kari).old");
+                    //File.Delete("KeyboardHooked.old");
+                    //File.Delete("ConfigEditor.old");
                 }
                 // 二重起動を禁止する
                 if (mutex.WaitOne(0, false))
                 {
                     var currentContext = TaskScheduler.FromCurrentSynchronizationContext();
                     ShowloadscreenAsync();
-                    Task.WaitAny(uc.UpdatecheckAsync());
+                    Task[] tasks = {
+                        uc.UpdatecheckAsync().ContinueWith((Task) => {
+                            //更新前の旧ファイルを削除
+                            File.Delete("Cookiesound(kari).old");
+                            File.Delete("KeyboardHooked.old");
+                            File.Delete("ConfigEditor.old");
+                        }),
+                        IrcConnection.ConnectionAync(args)
+                    };
+                    Task.WaitAll(tasks);
+                    //Task.WaitAny(uc.UpdatecheckAsync());
                     if (uc.dlcomplete && !uc.noupdate)
                     {
                         Application.Exit();
@@ -81,7 +91,7 @@ namespace Cookiesound_kari_
                         Environment.Exit(0);
                     }
                     GetAllFiles(@"./sound", "*.ogg", ref files);
-                    IrcConnection.Connection(args);
+                    //IrcConnection.Connection(args);
                     Program.res.Start();
                     while (Irc.IrcBot.irc.IsRegistered == false) { }
                     Application.Exit();

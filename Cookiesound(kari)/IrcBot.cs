@@ -4,6 +4,7 @@ using System.Collections;
 using Cookiesound_kari_;
 using Meebey.SmartIrc4net;
 using System.Windows.Forms;
+using System.Threading.Tasks;
 
 namespace Irc
 {
@@ -198,9 +199,9 @@ namespace Irc
                 Exit();
             }
         }
-        public static void Connection(string[] args)
+        public static async Task ConnectionAync(string[] args)
         {
-            Thread.CurrentThread.Name = "Connection";
+            //Thread.CurrentThread.Name = "Connection";
             var irc_server = Ini.Read<Irc.Irc_server>("Irc_server","config.ini");
             irc.Encoding = System.Text.Encoding.GetEncoding("ISO-2022-JP");
             // wait time between messages, we can set this lower on own irc servers
