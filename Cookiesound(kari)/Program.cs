@@ -35,7 +35,7 @@ namespace Cookiesound_kari_
         /// アプリケーションのメイン エントリ ポイントです。
         /// </summary>
         /// 
-        [STAThread]
+        //[STAThread]
         static void Main (string[] args)
         {
             // Register the IOleMessageFilter to handle any threading 
