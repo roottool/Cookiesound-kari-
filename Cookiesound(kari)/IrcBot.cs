@@ -49,10 +49,10 @@ namespace Irc
             if (!checkpoint) checkpoint = true;
             else
             {
-                Form1.Form1Instance.SetLabelText(e.Data.Nick.Remove(e.Data.Nick.Length - 1, 1) + " : " + e.Data.Message + Environment.NewLine);
+                MainScreen.Form1Instance.SetLabelText(e.Data.Nick.Remove(e.Data.Nick.Length - 1, 1) + " : " + e.Data.Message + Environment.NewLine);
                 if (Program.files.IndexOf(e.Data.Message, 0) != -1)
                 {
-                    Form1.Form1Instance.Soundplay(e.Data.Message, e.Data.Nick.Remove(e.Data.Nick.Length - 1, 1));
+                    MainScreen.Form1Instance.Soundplay(e.Data.Message, e.Data.Nick.Remove(e.Data.Nick.Length - 1, 1));
                 }
             }
         }
@@ -161,23 +161,23 @@ namespace Irc
                     st = System.Text.RegularExpressions.Regex.Replace(st, @"^@", "");
                     System.Text.RegularExpressions.Regex extraction_r = new System.Text.RegularExpressions.Regex(@"^[\w-|~|^]+");
                     System.Text.RegularExpressions.Match extraction_m = extraction_r.Match(st);
-                    Form1.names_array.Clear();
+                    MainScreen.names_array.Clear();
                     //while (st != string.Empty)
                     while (extraction_m.Success)
                     {
                         extraction = extraction_m.Value;
-                        Form1.names_array.Add(extraction);
+                        MainScreen.names_array.Add(extraction);
                         st = System.Text.RegularExpressions.Regex.Replace(st, @"^[\w-|~|^]+ ", "");
                         st = System.Text.RegularExpressions.Regex.Replace(st, @"^@", "");
                         extraction_m = extraction_r.Match(st);
                     }
-                    Form1.names_list = (string[])Form1.names_array.ToArray(typeof(string));
+                    MainScreen.names_list = (string[])MainScreen.names_array.ToArray(typeof(string));
                 if (initialization_completed)
                 {
-                    Form1.Form1Instance.SetLabelText("「↑」または「↓」でニックネームを選択" + Environment.NewLine);
-                    Form1.Form1Instance.SetLabelText("「→」で決定、「←」でキャンセル" + Environment.NewLine);
-                    Form1.Form1Instance.SetLabelText("自ニックネーム選択時は空欄となり、" + Environment.NewLine);
-                    Form1.Form1Instance.SetLabelText("「→」を押しても無効になります。" + Environment.NewLine);
+                    MainScreen.Form1Instance.SetLabelText("「↑」または「↓」でニックネームを選択" + Environment.NewLine);
+                    MainScreen.Form1Instance.SetLabelText("「→」で決定、「←」でキャンセル" + Environment.NewLine);
+                    MainScreen.Form1Instance.SetLabelText("自ニックネーム選択時は空欄となり、" + Environment.NewLine);
+                    MainScreen.Form1Instance.SetLabelText("「→」を押しても無効になります。" + Environment.NewLine);
                 }
                 else initialization_completed = true;
             }

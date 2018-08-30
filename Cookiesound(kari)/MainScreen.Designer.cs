@@ -3,7 +3,7 @@ using HongliangSoft.Utilities.Gui;
 
 namespace Cookiesound_kari_
 {
-    partial class Form1
+    partial class MainScreen
     {
         /// <summary>
         /// 必要なデザイナー変数です。
@@ -31,7 +31,7 @@ namespace Cookiesound_kari_
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form1));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(MainScreen));
             this.button1 = new System.Windows.Forms.Button();
             this.textBox1 = new System.Windows.Forms.TextBox();
             this.label1 = new System.Windows.Forms.Label();

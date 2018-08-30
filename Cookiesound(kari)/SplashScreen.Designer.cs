@@ -1,7 +1,7 @@
 ﻿using System;
 namespace Cookiesound_kari_
 {
-    partial class Form2
+    partial class SplashScreen
     {
         /// <summary>
         /// Required designer variable.
@@ -29,9 +29,9 @@ namespace Cookiesound_kari_
         /// </summary>
         private void InitializeComponent()
         {
-            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(Form2));
+            System.ComponentModel.ComponentResourceManager resources = new System.ComponentModel.ComponentResourceManager(typeof(SplashScreen));
             this.label1 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
+            this.PlayButton = new System.Windows.Forms.Button();
             this.progressBar1 = new System.Windows.Forms.ProgressBar();
             this.pictureBox1 = new System.Windows.Forms.PictureBox();
             this.label2 = new System.Windows.Forms.Label();
@@ -46,24 +46,24 @@ namespace Cookiesound_kari_
             this.label1.ForeColor = System.Drawing.SystemColors.ButtonHighlight;
             this.label1.Location = new System.Drawing.Point(24, 319);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(349, 60);
+            this.label1.Size = new System.Drawing.Size(350, 60);
             this.label1.TabIndex = 0;
             this.label1.Text = "Checking for Updates and\r\nConnecting IRC chat channel...";
             // 
-            // button1
+            // PlayButton
             // 
-            this.button1.BackColor = System.Drawing.Color.Transparent;
-            this.button1.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("button1.BackgroundImage")));
-            this.button1.FlatAppearance.BorderSize = 0;
-            this.button1.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.button1.ForeColor = System.Drawing.Color.Black;
-            this.button1.Image = ((System.Drawing.Image)(resources.GetObject("button1.Image")));
-            this.button1.Location = new System.Drawing.Point(217, 238);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(111, 51);
-            this.button1.TabIndex = 2;
-            this.button1.UseVisualStyleBackColor = false;
-            this.button1.Click += new System.EventHandler(this.button1_Click);
+            this.PlayButton.BackColor = System.Drawing.Color.Transparent;
+            this.PlayButton.BackgroundImage = ((System.Drawing.Image)(resources.GetObject("PlayButton.BackgroundImage")));
+            this.PlayButton.FlatAppearance.BorderSize = 0;
+            this.PlayButton.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.PlayButton.ForeColor = System.Drawing.Color.Black;
+            this.PlayButton.Image = ((System.Drawing.Image)(resources.GetObject("PlayButton.Image")));
+            this.PlayButton.Location = new System.Drawing.Point(217, 238);
+            this.PlayButton.Name = "PlayButton";
+            this.PlayButton.Size = new System.Drawing.Size(111, 51);
+            this.PlayButton.TabIndex = 2;
+            this.PlayButton.UseVisualStyleBackColor = false;
+            this.PlayButton.Click += new System.EventHandler(this.PlayButton_Click);
             // 
             // progressBar1
             // 
@@ -95,11 +95,11 @@ namespace Cookiesound_kari_
             this.label2.ForeColor = System.Drawing.Color.DarkRed;
             this.label2.Location = new System.Drawing.Point(156, 349);
             this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(56, 30);
+            this.label2.Size = new System.Drawing.Size(57, 30);
             this.label2.TabIndex = 5;
             this.label2.Text = "IRC";
             // 
-            // Form2
+            // SplashScreen
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 12F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -109,15 +109,15 @@ namespace Cookiesound_kari_
             this.Controls.Add(this.label2);
             this.Controls.Add(this.pictureBox1);
             this.Controls.Add(this.progressBar1);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.PlayButton);
             this.Controls.Add(this.label1);
             this.DoubleBuffered = true;
             this.ForeColor = System.Drawing.Color.Black;
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.None;
             this.Icon = ((System.Drawing.Icon)(resources.GetObject("$this.Icon")));
-            this.Name = "Form2";
+            this.Name = "SplashScreen";
             this.Text = "Cookie☆sound";
-            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.Form2_FormClosing);
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.SplashScreen_FormClosing);
             ((System.ComponentModel.ISupportInitialize)(this.pictureBox1)).EndInit();
             this.ResumeLayout(false);
             this.PerformLayout();
@@ -127,7 +127,7 @@ namespace Cookiesound_kari_
         #endregion
 
         private System.Windows.Forms.Label label1;
-        private System.Windows.Forms.Button button1;
+        private System.Windows.Forms.Button PlayButton;
         private System.Windows.Forms.ProgressBar progressBar1;
         private System.Windows.Forms.PictureBox pictureBox1;
         private System.Windows.Forms.Label label2;

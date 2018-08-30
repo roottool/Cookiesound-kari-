@@ -10,7 +10,7 @@ namespace Cookiesound_kari_
     using IrcConnection = Irc.IrcBot;
     
 
-    public partial class Form1 : Form
+    public partial class MainScreen : Form
     {
         public static ArrayList names_array = new ArrayList();
         public static string[] names_list;
@@ -29,16 +29,16 @@ namespace Cookiesound_kari_
         //Invokeを呼び出すためのdelegate作成
         private delegate void DelSetLabelText(string str);
 
-        public Form1()
+        public MainScreen()
         {
             h.hookkey = h.hookkey.ToUpper();
             InitializeComponent();
         }
-        //Form1オブジェクトを保持するためのフィールド
-        private static Form1 _form1Instance;
+        //MainScreenオブジェクトを保持するためのフィールド
+        private static MainScreen _form1Instance;
 
-        //Form1オブジェクトを取得、設定するためのプロパティ
-        public static Form1 Form1Instance
+        //MainScreenオブジェクトを取得、設定するためのプロパティ
+        public static MainScreen Form1Instance
         {
             get
             {
@@ -296,7 +296,7 @@ namespace Cookiesound_kari_
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            Form1.Form1Instance = this;
+            MainScreen.Form1Instance = this;
             Program.engine.SoundVolume = (float)((float)other.volume / (float)100);
             _wmp.settings.volume = other.volume;
         }

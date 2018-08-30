@@ -16,7 +16,7 @@ namespace Cookiesound_kari_
         public static ArrayList ignores;
         public static Irc.resive res;
         public static Updatecheck uc;
-        public static Form1 f;
+        public static MainScreen f;
         // start the sound engine with default parameters
         public static ISoundEngine engine;
 
@@ -26,7 +26,7 @@ namespace Cookiesound_kari_
             ignores = new ArrayList();
             res = new Irc.resive();
             uc = new Updatecheck();
-            f = new Form1();
+            f = new MainScreen();
             // start the sound engine with default parameters
             engine = new ISoundEngine();
         }
@@ -88,7 +88,7 @@ namespace Cookiesound_kari_
                     res.ListenMessageAsync();
                     while (Irc.IrcBot.irc.IsRegistered == false) { }
                     Application.Exit();
-                    Form1.Form1Instance = f;
+                    MainScreen.Form1Instance = f;
                     Application.Run(f);
                 }
                 else
@@ -110,7 +110,7 @@ namespace Cookiesound_kari_
                 {
                     Application.EnableVisualStyles();
                     Application.SetCompatibleTextRenderingDefault(false);
-                    Application.Run(new Form2());
+                    Application.Run(new SplashScreen());
                 }
                 catch (System.Threading.ThreadAbortException)
                 {
