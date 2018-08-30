@@ -22,9 +22,9 @@ namespace Cookiesound_kari_
         public Boolean noupdate;
         private string s;
         private string str;
-        private int str_major;
-        private int str_minor;
-        private int str_build_number;
+        private int major;
+        private int minor;
+        private int build_number;
         private string str_minor_tmpstr;
         private string str_sound;
         private string str_csr;
@@ -60,32 +60,37 @@ namespace Cookiesound_kari_
         {
             try
             {
+                
                 WebClient wc = new WebClient();
                 //Stream st = wc.OpenRead("https://www.dropbox.com/sh/vxnv1zltyr7sais/AADhPLLkZbbH7tppr6DXRVHaa?dl=0"); //bkDebug
                 //Stream st = wc.OpenRead("https://www.dropbox.com/sh/wb47tpk36741rp7/AABEUAPlgnMO8onurQNOvCBta?dl=0"); //Debug
-                Stream st = wc.OpenRead("https://www.dropbox.com/sh/ryqu51l1y8mokwo/AAAmZm3p6FyGei7qatiO1xTLa?dl=0");//main
+                //Stream st = wc.OpenRead("https://www.dropbox.com/sh/ryqu51l1y8mokwo/AAAmZm3p6FyGei7qatiO1xTLa?dl=0");//main
+                Stream st = wc.OpenRead("https://cookiesound-4de19.firebaseapp.com/file.list");
                 StreamReader sr = new StreamReader(st, Encoding.GetEncoding(51932));
 
                 s = sr.ReadToEnd();
+                st.Close();
+                wc.Dispose();
+
                 Regex ver_r = new Regex(@"[\d|.]+_Cookiesound");
                 Match ver_m = ver_r.Match(s);
                 str = Regex.Replace(ver_m.Value, "_Cookiesound", "");
-                str_major = int.Parse(Regex.Replace(str, @".[\d]+.[\d]+$", ""));
+                major = int.Parse(Regex.Replace(str, @".[\d]+.[\d]+$", ""));
                 str_minor_tmpstr = Regex.Replace(str, @"^[\d]+.", "");
-                str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
-                str_build_number = int.Parse(Regex.Replace(str, @"^[\d]+.[\d]+.", ""));
+                minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
+                build_number = int.Parse(Regex.Replace(str, @"^[\d]+.[\d]+.", ""));
+                
 
-                st.Close();
-                wc.Dispose();
+                //anewClientCheck();
 
                 DateTime rewirte_keyboardhook_time = new DateTime(2015, 11, 9, 0, 0, 0);
                 DateTime rewirte_ConfigEditor_time = new DateTime(2017, 7, 17, 0, 0, 0);
 
                 if (File.GetLastWriteTime("KeyboardHooked.dll").CompareTo(rewirte_keyboardhook_time) < 0
                     || File.GetLastWriteTime("ConfigEditor.exe").CompareTo(rewirte_ConfigEditor_time) < 0
-                    || currentmajorVer < str_major
-                    || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                    || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                    || currentmajorVer < major
+                    || (currentmajorVer >= major && currentminorVer < minor)
+                    || (currentmajorVer >= major && currentminorVer >= minor && currentbuild_number < build_number))
                 {
                     MessageBox.Show("アップデートがあります。自動更新後に再起動を行います。");
 
@@ -99,16 +104,16 @@ namespace Cookiesound_kari_
                     }
 
                     //ConfigEditorの更新チェックと更新
-                    m3 = Regex.Match(s, "\"" + @"[\d|.]+_ConfigEditor.exe");
+                    m3 = Regex.Match(s, @"[\d|.]+_ConfigEditor.exe");
                     str_cfg = Regex.Replace(m3.Value, "\"", "");
                     str_cfg = Regex.Replace(str_cfg, @"_ConfigEditor.exe", "");
-                    str_major = int.Parse(Regex.Replace(str_cfg, @".[\d]+.[\d]+$", ""));
+                    major = int.Parse(Regex.Replace(str_cfg, @".[\d]+.[\d]+$", ""));
                     str_minor_tmpstr = Regex.Replace(str_cfg, @"^[\d]+.", "");
-                    str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
-                    str_build_number = int.Parse(Regex.Replace(str_cfg, @"^[\d]+.[\d]+.", ""));
-                    if (currentmajorVer < str_major || File.GetLastWriteTime("ConfigEditor.exe").CompareTo(rewirte_ConfigEditor_time) < 0
-                        || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                        || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                    minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
+                    build_number = int.Parse(Regex.Replace(str_cfg, @"^[\d]+.[\d]+.", ""));
+                    if (currentmajorVer < major || File.GetLastWriteTime("ConfigEditor.exe").CompareTo(rewirte_ConfigEditor_time) < 0
+                        || (currentmajorVer >= major && currentminorVer < minor)
+                        || (currentmajorVer >= major && currentminorVer >= minor && currentbuild_number < build_number))
                     {
                         downloadClient = null;
                         u = new Uri("https://cookiesound-4de19.firebaseapp.com/" + str_cfg + "_ConfigEditor.exe");
@@ -131,20 +136,20 @@ namespace Cookiesound_kari_
                     {
                         if (System.IO.Directory.Exists("sound"))
                         {
-                            mc = Regex.Matches(s, "\"filename\": \"" + @"[\d|.]+_[\w-|^]+.ogg");
+                            mc = Regex.Matches(s, @"[\d|.]+_[\w-|^]+.ogg");
                             addsounds = new List<string>();
                             foreach (Match m in mc)
                             {
                                 str_sound = Regex.Replace(m.Groups[0].Value, "\"filename\": \"", "");
                                 str_sound = Regex.Replace(str_sound, @"_[\w-|^]+.ogg", "");
                                 str_sound = Regex.Replace(str_sound, "\"", "");
-                                str_major = int.Parse(Regex.Replace(str_sound, @".[\d]+.[\d]+$", ""));
+                                major = int.Parse(Regex.Replace(str_sound, @".[\d]+.[\d]+$", ""));
                                 str_minor_tmpstr = Regex.Replace(str_sound, @"^[\d]+.", "");
-                                str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
-                                str_build_number = int.Parse(Regex.Replace(str_sound, @"^[\d]+.[\d]+.", ""));
-                                if (currentmajorVer < str_major
-                                    || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                                    || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                                minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
+                                build_number = int.Parse(Regex.Replace(str_sound, @"^[\d]+.[\d]+.", ""));
+                                if (currentmajorVer < major
+                                    || (currentmajorVer >= major && currentminorVer < minor)
+                                    || (currentmajorVer >= major && currentminorVer >= minor && currentbuild_number < build_number))
                                 {
                                     addsounds.Add(Regex.Replace(m.Groups[0].Value, "\"filename\": \"", ""));
                                 }
@@ -179,20 +184,20 @@ namespace Cookiesound_kari_
 
                         if (System.IO.Directory.Exists("sound/csr"))
                         {
-                            mc2 = Regex.Matches(s, "\"" + @"[\d|.]+_[\w|-|^]+.mp3");
+                            mc2 = Regex.Matches(s, @"[\d|.]+_[\w|-|^]+.mp3");
                             addcsrs = new List<string>();
                             foreach (Match m in mc2)
                             {
                                 str_csr = Regex.Replace("" + m.Groups[0].Value, "\"filename\": \"", "");
                                 str_csr = Regex.Replace("" + str_csr, @"_[\w|-|^]+.mp3", "");
                                 str_csr = Regex.Replace(str_csr, "\"", "");
-                                str_major = int.Parse(Regex.Replace(str_csr, @".[\d]+.[\d]+$", ""));
+                                major = int.Parse(Regex.Replace(str_csr, @".[\d]+.[\d]+$", ""));
                                 str_minor_tmpstr = Regex.Replace(str_csr, @"^[\d]+.", "");
-                                str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
-                                str_build_number = int.Parse(Regex.Replace(str_csr, @"^[\d]+.[\d]+.", ""));
-                                if (currentmajorVer < str_major
-                                    || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                                    || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                                minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
+                                build_number = int.Parse(Regex.Replace(str_csr, @"^[\d]+.[\d]+.", ""));
+                                if (currentmajorVer < major
+                                    || (currentmajorVer >= major && currentminorVer < minor)
+                                    || (currentmajorVer >= major && currentminorVer >= minor && currentbuild_number < build_number))
                                 {
                                     addcsrs.Add(Regex.Replace(m.Groups[0].Value, "\"filename\": \"", ""));
                                 }
@@ -226,16 +231,16 @@ namespace Cookiesound_kari_
 
                         }
 
-                        m2 = Regex.Match(s, "\"" + @"[\d|.]+_csr_list.txt");
+                        /*m2 = Regex.Match(s, "\"" + @"[\d|.]+_csr_list.txt");
                         str_csr_list = Regex.Replace(m2.Value, "\"", "");
                         str_csr_list = Regex.Replace(str_csr_list, @"_csr_list.txt", "");
                         str_major = int.Parse(Regex.Replace(str_csr_list, @".[\d]+.[\d]+$", ""));
                         str_minor_tmpstr = Regex.Replace(str_csr_list, @"^[\d]+.", "");
                         str_minor = int.Parse(Regex.Replace(str_minor_tmpstr, @".[\d]+$", ""));
-                        str_build_number = int.Parse(Regex.Replace(str_csr_list, @"^[\d]+.[\d]+.", ""));
-                        if (currentmajorVer < str_major
-                            || (currentmajorVer >= str_major && currentminorVer < str_minor)
-                            || (currentmajorVer >= str_major && currentminorVer >= str_minor && currentbuild_number < str_build_number))
+                        str_build_number = int.Parse(Regex.Replace(str_csr_list, @"^[\d]+.[\d]+.", ""));*/
+                        if (currentmajorVer < major
+                            || (currentmajorVer >= major && currentminorVer < minor)
+                            || (currentmajorVer >= major && currentminorVer >= minor && currentbuild_number < build_number))
                         {
                             webreq = (System.Net.HttpWebRequest)System.Net.WebRequest.Create("https://cookiesound-4de19.firebaseapp.com/" + str_csr_list);
 
@@ -282,9 +287,7 @@ namespace Cookiesound_kari_
             }
             catch (System.Exception)
             {
-            }
-            finally
-            {
+                Console.WriteLine("maa");
             }
         }
 
@@ -359,6 +362,89 @@ namespace Cookiesound_kari_
             else
             {
                 dlcomplete = true;
+            }
+        }
+
+        private void newClientCheck()
+        {
+            var clientName = (currentmajorVer + 1).ToString() + "." + currentminorVer.ToString() + "." + currentbuild_number.ToString() + "_Cookiesound(kari).exe";
+            var url = new Uri("https://cookiesound-4de19.firebaseapp.com/" + clientName);
+            var result = connectClinetURL(url);
+
+            if (result)
+            {
+                major = currentmajorVer + 1;
+            }
+            else
+            {
+                major = currentmajorVer;
+            }
+
+            clientName = currentmajorVer.ToString() + "." + (currentminorVer + 1).ToString() + "." + currentbuild_number.ToString() + "_Cookiesound(kari).exe";
+            url = new Uri("https://cookiesound-4de19.firebaseapp.com/" + clientName);
+            result = connectClinetURL(url);
+            if (result)
+            {
+                minor = currentminorVer + 1;
+            }
+            else
+            {
+                minor = currentminorVer;
+            }
+
+            clientName = currentmajorVer.ToString() + "." + currentminorVer.ToString() + "." + (currentbuild_number + 1).ToString() + "_Cookiesound(kari).exe";
+            url = new Uri("https://cookiesound-4de19.firebaseapp.com/" + clientName);
+            result = connectClinetURL(url);
+            if (result)
+            {
+                build_number = currentbuild_number + 1;
+            }
+            else
+            {
+                build_number = currentbuild_number;
+            }
+        }
+
+        private Boolean connectClinetURL(Uri url)
+        {
+            HttpWebRequest req = (HttpWebRequest)WebRequest.Create(url);
+            HttpWebResponse res = null;
+            HttpStatusCode statusCode;
+
+            try
+            {
+                res = (HttpWebResponse)req.GetResponse();
+                statusCode = res.StatusCode;
+
+            }
+            catch (WebException ex)
+            {
+
+                res = (HttpWebResponse)ex.Response;
+
+                if (res != null)
+                {
+                    statusCode = res.StatusCode;
+                }
+                else
+                {
+                    throw; // サーバ接続不可などの場合は再スロー
+                }
+            }
+            finally
+            {
+                if (res != null)
+                {
+                    res.Close();
+                }
+            }
+            if (res != null && (int)statusCode == 200)
+            {
+                return true;
+            }
+            else
+            {
+                return false;
             }
         }
     }
